@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../auth.css">
+</head>
+<body>
+<header class="header">
+    <div class="logo-container" onclick="location.href='../index.html'">
+        <img src="../assets/logo.jpg" height="50px">
+        <h3 class="logo">UniLost</h3>
+    </div>
+    <nav class="nav-bar">
+        <a href="../index.html">Home</a>
+        <a href="lost.html">Lost Objects</a>
+        <a href="found.html">Found Objects</a>
+    </nav>
+    <div class="auth">
+        <a class="login-btn" href="login.html">Login</a>
+        <a class="register-btn" href="register.html">Register</a>
+    </div>
+</header>
+<hr class="separator">
+<main>
+    <img class="main-logo" src="../assets/logo.jpg" width="50px">
+    <div class="title-container" >
+        <h1 class="main-title">Welcome Back</h1>
+        <p>Sign in to your UniLost account</p>
+    </div>
+    <form action="POST" class="register-form">
+        <label for="Email">Email</label>
+        <div >
+            <img src="../assets/email.png">
+            <input id="Email" type="email" placeholder="Email">
+        </div>
+        <label for="Password">Password</label>
+        <div>
+            <img src="../assets/padlock.png">
+            <input id="Password" type="password" placeholder="Password">
+
+        </div>
+        <button type="submit" class="register-btn">Sign in</button>
+        <p>Don't have an account? <a href="register.html">Register here</a></p>
+    </form>
+</main>
+<hr class="separator">
+<footer>
+    <div class="footer-content">
+        <div class="footer-description">
+            <div>
+                <img class="footer-logo" src="../assets/logo.jpg" alt=".">
+            </div>
+            <div>
+                <h3>Unilost</h3>
+                <p>Reuniting students with their belongings</p>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>© 2026 UniLost. Made with 🧡 for students</p>
+        </div>
+    </div>
+
+</footer>
+</body>
+</html>

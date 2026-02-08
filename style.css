@@ -4,24 +4,54 @@
     padding: 0;
     box-sizing: border-box;
     font-family: Arial, sans-serif;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    }
+
+    input, textarea {
+    user-select: text;
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
     }
 
 /* HEADER */
-.header {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  padding: 12px 24px;
-}
+    .header {position: fixed;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        padding: 12px 24px;
+        top: 0;
+        z-index: 999;
+        background-color: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
+    }
 
-/* LOGO */
+    .header::after {
+        content: "";
+        display: block;
+        height: 0.5px;
+        width: 100%;
+        background-color: #ccc;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        border: none;
+    }
+
+
+    /* LOGO */
 .logo-container{
     display: flex;
     align-items: center;
     gap: 5px;
     font-size: 18px;
     margin-right: 60px;
+    cursor: pointer;
+
 }
 
 
@@ -30,8 +60,6 @@
     height: 27px;
     width: 30px;
 }
-
-
 
 
 
@@ -64,18 +92,25 @@
     border-radius: 4px;
     transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
 }
-    
 
-.separator {
-    border: none;
-    height: 0.5px;
-    background-color: rgba(175, 175, 175, 0.425);
-}
-.separator2{
-    border: none;
-    height: 0.5px;
-    background-color: rgba(175, 175, 175, 0.425);
-}
+
+    .separator {
+        margin: 0;
+        height: 0.5px;
+        background-color: #ccc;
+        border: none;
+        width: 100%;
+    }
+
+
+
+    .separator2 {
+        border: none;
+        height: 1px;
+        background-color: rgba(175, 175, 175, 0.425);
+        margin: 0;
+        z-index: 1000;
+    }
 
 
     /* AUTH BUTTONS */
@@ -96,15 +131,13 @@
 
 /* LOGIN BUTTON */
 .login-btn {
-  background-color: transparent;
-  color: hsla(0, 0%, 14%, 0.796);
-  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+    background: linear-gradient(135deg, hsl(35 95% 50%), hsl(25 95% 60%));
+    color: #ffffff;
+    transition: transform 0.2s ease-in-out;
 }
 
-.login-btn:hover{   
-    background-color: rgba(148, 148, 148, 0.134);
-    color: rgb(56, 56, 56);
-    transition: ease-in-out 0.3s;
+.login-btn:hover{
+    transform: scale(1.02);
 }
 
 /* REGISTER BUTTON */
@@ -121,6 +154,7 @@
     /* MAIN CONTENT */
     .intro{
         background-color: hsl(180 20% 96%);
+        padding: 30px 0;
     }
 
 .platform-title-container{
@@ -129,7 +163,7 @@
     background-color: hsl(181, 60%, 90%);
     border-radius: 15px;
     width: fit-content;
-    margin: 80px auto 0 auto;
+    margin: 75px auto 0 auto;
     padding: 10px;
     display: flex;
     align-items: center;
@@ -332,9 +366,10 @@
 }
 
 .footer-content{
-    padding: 40px;
+    padding: 20px 50px;
+    margin-top: 10px;
     display: flex;
-    justify-content: center;
+    justify-content: left;
     gap: 300px;
 }
 
