@@ -224,7 +224,7 @@
     border-radius: 15px;
     border: 1px solid hsl(180 15% 88%);
     background-color: white;
-    transition: ease-in-out 0.2s;
+    transition: transform 0.2s ease-in-out, color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -236,7 +236,8 @@
 }
 
 .browse-found-container:hover{
-    background-color: rgba(235, 235, 235, 0.38);
+    transform: scale(1.02);
+    box-shadow: 1px 5px 20px rgba(0, 0, 0, 0.134);
 }
 
 
