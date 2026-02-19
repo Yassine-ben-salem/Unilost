@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Unilost</title>
     <link rel="stylesheet" href="style.css">
+
 </head>
 <body>
 <header class="header">
@@ -56,9 +57,11 @@
             </div>
             <p>The latest lost and found items from the community</p>
             <div class="posts-container">
-                <div class="post-card">
+                <div class="post-card" onclick="goToDetails(this)">
                     <span class="post-status is-found">FOUND</span>
-                    <img class="post-image" src="../images/sample-item.jpg">
+                    <div class="post-image-container">
+                        <img class="post-image" src="assets/no-photo.png" >
+                    </div>
                     <h3 class="post-title">Stainless Steel Water Bottle</h3>
                     <p class="post-desc">Silver bottle with a blue cap, slight dent near the bottom.</p>
                     <div class="post-meta">
@@ -66,9 +69,11 @@
                         <span class="post-date">2026-02-04</span>
                     </div>
                 </div>
-                <div class="post-card">
+                <div class="post-card" onclick="goToDetails(this)">
                     <span class="post-status is-lost">LOST</span>
-                    <img class="post-image" src="../images/sample-item.jpg">
+                    <div class="post-image-container">
+                        <img class="post-image" src="assets/no-photo.png">
+                    </div>
                     <h3 class="post-title">Stainless Steel Water Bottle</h3>
                     <p class="post-desc">Silver bottle with a blue cap, slight dent near the bottom.</p>
                     <div class="post-meta">
@@ -78,7 +83,9 @@
                 </div>
                 <div class="post-card">
                     <span class="post-status is-found">FOUND</span>
-                    <img class="post-image" src="../images/sample-item.jpg">
+                    <div class="post-image-container">
+                        <img class="post-image" src="assets/no-photo.png">
+                    </div>
                     <h3 class="post-title">Stainless Steel Water Bottle</h3>
                     <p class="post-desc">Silver bottle with a blue cap, slight dent near the bottom.</p>
                     <div class="post-meta">
@@ -115,4 +122,15 @@
 
 </footer>
 </body>
+<script>
+    function goToDetails(element) {
+        const status = element.querySelector('.post-status');
+        if (status.classList.contains('is-found')) {
+            window.location.href = 'pages/found-details.html';
+        } else if (status.classList.contains('is-lost')) {
+            window.location.href = 'pages/lost-details.html';
+        }
+    }
+</script>
+
 </html>
