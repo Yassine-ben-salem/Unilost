@@ -17,6 +17,40 @@
     -ms-user-select: text;
     }
 
+    html {
+    scroll-behavior: smooth;
+    min-height: 100%;
+    }
+
+    body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    }
+
+    main {
+    flex: 1;
+    }
+
+    footer {
+    margin-top: auto;
+    }
+
+    @keyframes fade-up-load {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    }
+
+    .page-load {
+    animation: fade-up-load 0.55s ease-out both;
+    }
+
 /* HEADER */
     .header {position: fixed;
         width: 100%;

@@ -1,0 +1,138 @@
+.item-card{
+    border: 1px solid #ccc;
+    width: 50%;
+    margin: 150px auto;
+    border-radius: 15px;
+}
+
+.item-image-container{
+    width: 100%;
+    height: 100%;
+    background-color: whitesmoke;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 15px 15px 0 0;
+}
+.item-image{
+    width: 40%;
+    scale: 0.3;
+}
+
+.item-details{
+    padding: 20px;
+}
+
+.item-status{
+        top: 12px;
+        left: 12px;
+        padding: 6px 13px;
+        border-radius: 100px;
+        border: 1px solid;
+        font-size: 12px;
+        font-weight: 700;
+        width: fit-content;
+}
+
+.item-status.is-found{
+        color: hsl(181, 60%, 40%);
+        background-color: hsl(181, 60%, 90%);
+        border-color: hsl(181, 50%, 70%);
+}
+
+.item-status.is-lost{
+        color: hsl(38, 36%, 30%);
+        background-color: hsl(35 95% 90%);
+        border-color: hsl(35 95% 65%);
+}
+
+.item-title{
+    padding: 15px 0;
+    font-size: 30px;
+}
+
+.item-meta{
+    font-size: 15px;
+    color: hsl(0 0% 30%);
+    padding-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-left: 15px;
+}
+
+.details-container{
+    display: flex;
+    gap: 15px;
+}
+
+.details-container img{
+    width: 15px;
+    height: 15px;
+}
+
+.calendar-icon{
+    scale: 0.8;
+}
+
+.description-container{
+    padding: 20px 0;
+}
+
+.item-desc-title{
+    font-size: 20px;
+}
+
+.item-desc{
+    color: hsl(0 0% 30%);
+    font-size: 16px;
+    margin: 0;
+    padding: 10px 0;
+}
+
+.contact-container{
+    padding: 20px;
+    background-color: hsl(0 0% 97.5%);
+    border-radius: 10px;
+}
+
+.contact-container p{
+    padding: 10px 0 20px;
+    color: hsl(0 0% 30%);
+}
+
+.contact-btn-container{
+    background: linear-gradient(135deg, hsl(175 65% 40%), hsl(185 70% 45%));
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+    min-width: 185px;
+    padding: 10px 16px;
+    border-radius: 10px;
+    box-shadow: 1px 5px 20px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease-in-out, color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.contact-btn-container:hover{
+    transform: scale(1.02);
+    box-shadow: 1px 5px 20px rgba(0, 0, 0, 0.3);
+}
+
+.contact-btn-container img{
+    width: 18px;
+    height: 18px;
+    display: block;
+}
+
+.contact-btn-container a{
+    text-decoration: none;
+    color: white;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    line-height: 1;
+
+}
