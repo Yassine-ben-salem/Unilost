@@ -1,12 +1,13 @@
-.lost-intro{
+.all-intro{
     text-align: center;
     margin-top: 120px;
 }
 
-.lost-title-container{
+.all-title-container{
     color: hsl(28, 21%, 12%);
-    background-color: hsl(35 95% 90%);
-    border-color: hsl(35 95% 65%);
+    background-color: hsl(96, 65%, 88%);
+    border: 1px solid;
+    border-color: hsl(102, 51%, 82%);
     border-radius: 15px;
     width: fit-content;
     margin: 75px auto 0 auto;
@@ -16,15 +17,15 @@
     gap: 5px;
 }
 
-.lost-intro h1{ 
+.all-intro h1{ 
     padding: 15px;
 }
-.lost-intro p{
+.all-intro p{
     color: hsl(0 0% 40%);
     font-size: 16px;
 }
 
-.lost-posts{
+.mixed-posts{
     width: 80%;
     margin: 80px auto;
 }
