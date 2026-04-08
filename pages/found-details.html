@@ -1,70 +1,93 @@
 <!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Item details</title>
-    <link rel="stylesheet" href="../style.css">
-    <link rel="stylesheet" href="../details.css">
-</head>
-<body>
-<header class="header">
-    <div class="logo-container" onclick="window.location.href='../index.html'">
-        <img src="../assets/images/logo.jpg" height="50px">
+    <link rel="stylesheet" href="../style.css" />
+    <link rel="stylesheet" href="../details.css" />
+  </head>
+  <body>
+    <header class="header">
+      <div
+        class="logo-container"
+        onclick="window.location.href = '../index.html'"
+      >
+        <img src="../assets/images/logo.jpg" height="50px" />
         <h3 class="logo">UniLost</h3>
-    </div>
-    <nav class="nav-bar">
+      </div>
+      <nav class="nav-bar">
         <a href="../index.html">Home</a>
         <a href="lost.html">Lost Objects</a>
         <a href="found.html">Found Objects</a>
-    </nav>
-    <div class="auth">
+      </nav>
+      <div class="auth">
         <a class="login-btn" href="login.html">Login</a>
         <a class="register-btn" href="register.html">Register</a>
-    </div>
-</header>
-<main class="page-load">
-        <div class="item-card ">
-            <div class="item-image-container">
-                <img class="item-image" src="../assets/images/no-photo.png">
-            </div>
-            <div class="item-details">
-                <p class="item-status is-found" >FOUND</p>
-                <h2 class="item-title">Stainless Steel Water Bottle</h2>
-                    <div class="item-meta">
-                        <div class="details-container">
-                            <img src="../assets/images/gray-location.png" class="location-icon">
-                            <span class="item-place">Library - 2nd Floor</span>
-                        </div>
-                        <div class="details-container">
-                            <img src="../assets/images/calendar.png" class="calendar-icon">
-                            <span class="item-date">2026-02-04</span>
-                        </div>
-                        <div class="details-container">
-                            <img src="../assets/images/gray-user.png" class="user-icon">
-                            <span class="poster">Posted by Pat Rivera</span>
-                        </div> 
-                    </div><hr class="separator">
-                <div class="description-container">
-                    <b class="item-desc-title">Description</b>
-                    <p class="item-desc">Silver bottle with a blue cap, slight dent near the bottom.</p>
-                </div>
-                <div class="contact-container">
-                    <h3>Is this your item?</h3>
-                    <p>If this belongs to you, please contact the finder to claim it.</p>
-                    <div class="contact-btn-container">
-                        <a href="mailto:name@email.com">
-                            <img src="../assets/images/white-email.png" alt="Email icon">
-                            <span>Contact Finder</span>
-                        </a>
-                    </div>
-                </div>
-            </div>
+      </div>
+    </header>
+    <main class="page-load">
+      <div class="item-card">
+        <div class="item-image-container">
+          <img class="item-image" src="../assets/images/no-photo.png" />
         </div>
-</main>
+        <div class="item-details">
+          <p class="item-status is-found">FOUND</p>
+          <h2 class="item-title">Stainless Steel Water Bottle</h2>
+          <div class="item-meta">
+            <div class="details-container">
+              <img
+                src="../assets/images/gray-location.png"
+                class="location-icon"
+              />
+              <span class="item-place">Library - 2nd Floor</span>
+            </div>
+            <div class="details-container">
+              <img src="../assets/images/calendar.png" class="calendar-icon" />
+              <span class="item-date">2026-02-04</span>
+            </div>
+            <div class="details-container">
+              <img src="../assets/images/gray-user.png" class="user-icon" />
+              <span class="poster">Posted by Pat Rivera</span>
+            </div>
+          </div>
+          <hr class="separator" />
+          <div class="description-container">
+            <b class="item-desc-title">Description</b>
+            <p class="item-desc">
+              Silver bottle with a blue cap, slight dent near the bottom.
+            </p>
+          </div>
+          <div class="post-manage-container" hidden>
+            <h3 class="post-manage-title">Manage this post</h3>
+            <p class="post-manage-text">
+              If this item has been returned to its owner, you can mark the post as resolved.
+            </p>
+            <button type="button" class="resolve-post-btn">Mark as Resolved</button>
+            <p class="resolve-feedback" hidden></p>
+          </div>
+          <div class="contact-container">
+            <h3>Is this your item?</h3>
+            <p>
+              If this belongs to you, please contact the finder to claim it.
+            </p>
+            <div class="contact-email-block">
+              <div class="contact-email-row">
+                <span class="contact-email-value">name@email.com</span>
+                <button type="button" class="copy-email-btn">Copy</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
 
-<script src="../assets/js/auth.js" defer></script>
-</body>
+    <script src="../assets/js/auth.js" defer></script>
+    <script src="../assets/js/details.js" defer></script>
+    <script src="../assets/js/guard.js" defer></script>
+  </body>
 </html>

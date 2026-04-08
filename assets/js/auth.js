@@ -8,22 +8,105 @@ function getCurrentUser() {
 }
 
 function logout() {
-    localStorage.removeItem('unilost_user');
     const isInPagesFolder = window.location.pathname.includes('/pages/');
+    const logoutPath = isInPagesFolder ? '../php/logout.php' : 'php/logout.php';
+
+    fetch(logoutPath, {
+        method: 'POST',
+        credentials: 'same-origin'
+    }).catch(() => {});
+
+    localStorage.removeItem('unilost_user');
     window.location.href = isInPagesFolder ? '../index.html' : 'index.html';
 }
 
+function getRelativePath(page) {
+    return window.location.pathname.includes('/pages/') ? page : `pages/${page}`;
+}
+
+function setupAccountMenu() {
+    const menu = document.querySelector('.nav-account-menu');
+    const trigger = document.querySelector('.nav-account-trigger');
+
+    if (!menu || !trigger) return;
+
+    trigger.setAttribute('aria-expanded', 'false');
+
+    trigger.addEventListener('click', (event) => {
+        event.stopPropagation();
+        const isOpen = menu.classList.toggle('is-open');
+        trigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+
+    menu.querySelectorAll('.nav-account-link').forEach((link) => {
+        link.addEventListener('click', () => {
+            menu.classList.remove('is-open');
+            trigger.setAttribute('aria-expanded', 'false');
+        });
+    });
+
+    document.addEventListener('click', (event) => {
+        if (!menu.contains(event.target)) {
+            menu.classList.remove('is-open');
+            trigger.setAttribute('aria-expanded', 'false');
+        }
+    });
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+            menu.classList.remove('is-open');
+            trigger.setAttribute('aria-expanded', 'false');
+        }
+    });
+}
+
 function updateNavbar() {
-    const user    = getCurrentUser();
+    const user = getCurrentUser();
     const authDiv = document.querySelector('.auth');
     if (!authDiv) return;
 
     if (user) {
+        const initial = (user.name || 'U').trim().charAt(0).toUpperCase();
+
         authDiv.innerHTML = `
-      <span class="nav-username">${user.name}</span>
-      <button class="login-btn logout-btn" onclick="logout()">Logout</button>
+      <a class="nav-publish-btn" href="${getRelativePath('publish.html')}">+ Publish</a>
+      <div class="nav-account-menu">
+        <button class="nav-user-chip nav-account-trigger" type="button" aria-label="Open account menu">
+          <span class="nav-user-avatar">${initial}</span>
+          <span class="nav-username">${user.name}</span>
+          <span class="nav-account-caret" aria-hidden="true">▾</span>
+        </button>
+        <div class="nav-account-dropdown">
+          <a class="nav-account-link" href="${getRelativePath('my-posts.html')}">My Posts</a>
+          <button class="nav-account-link nav-account-logout" type="button" onclick="logout()">Logout</button>
+        </div>
+      </div>
     `;
+
+        setupAccountMenu();
     }
+}
+
+function updateHomepageCTA() {
+    const user = getCurrentUser();
+    const title = document.getElementById('homepage-cta-title');
+    const text = document.getElementById('homepage-cta-text');
+    const button = document.getElementById('homepage-cta-button');
+
+    if (!title || !text || !button) return;
+
+    if (user) {
+        title.textContent = 'Ready to publish an item?';
+        text.textContent = 'Post a lost or found item now and help the campus community reconnect with it faster.';
+        button.textContent = '+ Publish Item';
+        button.href = 'pages/publish.html';
+        return;
+    }
+
+    title.textContent = 'Found or Lost Something?';
+    text.textContent = 'Sign in to post items and help reunite belongings with their owners.';
+    button.textContent = '+ Get Started';
+    button.href = 'pages/login.html';
 }
 
 function showError(fieldId, message) {
@@ -135,20 +218,20 @@ if (loginForm) {
         clearAllErrors();
         removeBanner();
 
-        const email    = document.getElementById('Email').value;
+        const email = document.getElementById('Email').value;
         const password = document.getElementById('Password').value;
 
         if (!validateLogin(email, password)) return;
 
-        const btn = registerForm.querySelector('button[type="submit"]');
-        btn.disabled    = true;
+        const btn = loginForm.querySelector('button[type="submit"]');
+        btn.disabled = true;
         btn.textContent = 'Logging in...';
 
         try {
-            const res  = await fetch('../php/login.php', {
-                method:  'POST',
+            const res = await fetch('../php/login.php', {
+                method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body:    JSON.stringify({ email, password })
+                body: JSON.stringify({ email, password })
             });
             const data = await res.json();
 
@@ -160,6 +243,9 @@ if (loginForm) {
             }
         } catch (err) {
             showBanner('Could not connect to the server. Please try again.');
+        } finally {
+            btn.disabled = false;
+            btn.textContent = 'Sign in';
         }
     });
 }
@@ -175,27 +261,27 @@ if (registerForm) {
         clearAllErrors();
         removeBanner();
 
-        const name     = document.getElementById('FullName').value;
-        const email    = document.getElementById('Email').value;
+        const name = document.getElementById('FullName').value;
+        const email = document.getElementById('Email').value;
         const password = document.getElementById('Password').value;
-        const confirm  = document.getElementById('ConfirmPassword').value;
+        const confirm = document.getElementById('ConfirmPassword').value;
 
         if (!validateRegister(name, email, password, confirm)) return;
 
         const btn = registerForm.querySelector('button[type="submit"]');
-        btn.disabled    = true;
+        btn.disabled = true;
         btn.textContent = 'Creating account...';
 
         try {
-            const res  = await fetch('../php/register.php', {
-                method:  'POST',
+            const res = await fetch('../php/register.php', {
+                method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body:    JSON.stringify({ name, email, password })
+                body: JSON.stringify({ name, email, password })
             });
             const data = await res.json();
 
             if (data.success) {
-                saveSession(data.user);
+                saveUser(data.user);
                 window.location.href = '../index.html';
             } else {
                 showBanner(data.message || 'Registration failed. Please try again.');
@@ -203,10 +289,11 @@ if (registerForm) {
         } catch (err) {
             showBanner('Could not connect to the server. Please try again.');
         } finally {
-            btn.disabled    = false;
+            btn.disabled = false;
             btn.textContent = 'Create Account';
         }
     });
 }
 
 updateNavbar();
+updateHomepageCTA();

@@ -5,9 +5,8 @@
 
 .all-title-container{
     color: hsl(28, 21%, 12%);
-    background-color: hsl(96, 65%, 88%);
-    border: 1px solid;
-    border-color: hsl(102, 51%, 82%);
+    background-color: rgb(85.1% 97.8% 82.2%);
+    border: 1px solid rgb(167, 207, 158);
     border-radius: 15px;
     width: fit-content;
     margin: 75px auto 0 auto;

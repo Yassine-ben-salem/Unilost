@@ -1,83 +1,98 @@
 <!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Lost Items</title>
-  <link rel="stylesheet" href="../style.css">
-  <link rel="stylesheet" href="../lost.css">
-</head>
-<body>
-<header class="header">
-  <div class="logo-container" onclick="window.location.href='../index.html'">
-    <img src="../assets/images/logo.jpg" height="50px">
-    <h3 class="logo">UniLost</h3>
-  </div>
-  <nav class="nav-bar">
-    <a href="../index.html">Home</a>
-    <a href="lost.html">Lost Objects</a>
-    <a href="found.html">Found Objects</a>
-  </nav>
-  <div class="auth">
-    <a class="login-btn" href="login.html">Login</a>
-    <a class="register-btn" href="register.html">Register</a>
-  </div>
-</header>
-<hr class="separator">
-<main class="page-load">
-  <div class="lost-intro ">
-    <div class="lost-title-container">
-      <img src="../assets/images/search.png" width="15px">
-      <span class="lost-title">Lost Items</span>
-    </div>
-    <h1>Looking for Something?</h1>
-    <p>
-      Browse through items that have been reported as lost. Maybe you found one of them!
-    </p>
-  </div>
-  <div class="lost-posts ">
-    <div class="posts-container">
-      <div class="post-card">
-        <span class="post-status is-lost">LOST</span>
-        <div class="post-image-container">
-          <img class="post-image" src="../assets/images/no-photo.png">
+    <link rel="stylesheet" href="../style.css" />
+    <link rel="stylesheet" href="../lost.css" />
+  </head>
+  <body>
+    <header class="header">
+      <div
+        class="logo-container"
+        onclick="window.location.href = '../index.html'"
+      >
+        <img src="../assets/images/logo.jpg" height="50px" />
+        <h3 class="logo">UniLost</h3>
+      </div>
+      <nav class="nav-bar">
+        <a href="../index.html">Home</a>
+        <a href="lost.html">Lost Objects</a>
+        <a href="found.html">Found Objects</a>
+      </nav>
+      <div class="auth">
+        <a class="login-btn" href="login.html">Login</a>
+        <a class="register-btn" href="register.html">Register</a>
+      </div>
+    </header>
+    <hr class="separator" />
+    <main class="page-load">
+      <div class="lost-intro">
+        <div class="lost-title-container">
+          <img src="../assets/images/search.png" width="15px" />
+          <span class="lost-title">Lost Items</span>
         </div>
-        <h3 class="post-title">Stainless Steel Water Bottle</h3>
-        <p class="post-desc">Silver bottle with a blue cap, slight dent near the bottom.</p>
-        <div class="post-meta">
-          <div class="details-container ">
-            <img src="../assets/images/gray-location.png" class="location-icon">
-            <span class="post-place">Library - 2nd Floor</span><br>
-          </div>
-          <div class="details-container">
-            <img src="../assets/images/calendar.png" class="calendar-icon">
-            <span class="post-date">2026-02-04</span>
+        <h1>Looking for Something?</h1>
+        <p>
+          Browse through items that have been reported as lost. Maybe you found
+          one of them!
+        </p>
+      </div>
+      <div class="lost-posts">
+        <div class="posts-container">
+          <div class="post-card">
+            <span class="post-status is-lost">LOST</span>
+            <div class="post-image-container">
+              <img class="post-image" src="../assets/images/no-photo.png" />
+            </div>
+            <h3 class="post-title">Stainless Steel Water Bottle</h3>
+            <p class="post-desc">
+              Silver bottle with a blue cap, slight dent near the bottom.
+            </p>
+            <div class="post-meta">
+              <div class="details-container">
+                <img
+                  src="../assets/images/gray-location.png"
+                  class="location-icon"
+                />
+                <span class="post-place">Library - 2nd Floor</span><br />
+              </div>
+              <div class="details-container">
+                <img
+                  src="../assets/images/calendar.png"
+                  class="calendar-icon"
+                />
+                <span class="post-date">2026-02-04</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
+    </main>
+  </body>
+  <footer>
+    <hr class="separator" />
+    <div class="footer-content scroll-reveal" style="--reveal-delay: 120ms">
+      <div class="footer-description">
+        <div>
+          <img class="footer-logo" src="../assets/images/logo.jpg" alt="." />
+        </div>
+        <div>
+          <h3>Unilost</h3>
+          <p>Reuniting students with their belongings</p>
+        </div>
+      </div>
+      <div class="copyright">
+        <p>© 2026 UniLost. Made for the students</p>
       </div>
     </div>
-</main>
-</body>
-<footer>
-  <hr class="separator">
-  <div class="footer-content scroll-reveal" style="--reveal-delay: 120ms;">
-    <div class="footer-description">
-      <div>
-        <img class="footer-logo" src="../assets/images/logo.jpg" alt=".">
-      </div>
-      <div>
-        <h3>Unilost</h3>
-        <p>Reuniting students with their belongings</p>
-      </div>
-    </div>
-    <div class="copyright">
-      <p>© 2026 UniLost. Made for the students</p>
-    </div>
-  </div>
-
-</footer>
-<script src="../assets/js/auth.js" defer></script>
+  </footer>
+  <script src="../assets/js/auth.js" defer></script>
+  <script src="../assets/js/guard.js" defer></script>
+  <script src="../assets/js/posts.js" defer></script>
 </html>

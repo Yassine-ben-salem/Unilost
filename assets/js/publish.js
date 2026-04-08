@@ -1,14 +1,13 @@
-const form        = document.getElementById('post-item-form');
-const titleInput  = document.getElementById('item-title');
-const categoryEl  = document.getElementById('item-category');
-const locationEl  = document.getElementById('item-location');
-const dateEl      = document.getElementById('item-date');
-const descEl      = document.getElementById('item-description');
-const photoInput  = document.getElementById('item-photo');
-const preview     = document.getElementById('photo-preview');
+const form = document.getElementById('post-item-form');
+const titleInput = document.getElementById('item-title');
+const locationEl = document.getElementById('item-location');
+const dateEl = document.getElementById('item-date');
+const descEl = document.getElementById('item-description');
+const photoInput = document.getElementById('item-photo');
+const preview = document.getElementById('photo-preview');
 const placeholder = document.getElementById('photo-placeholder');
-const submitBtn   = document.getElementById('submit-btn');
-const banner      = document.getElementById('form-banner');
+const submitBtn = document.getElementById('submit-btn');
+const banner = document.getElementById('form-banner');
 
 
 
@@ -22,11 +21,11 @@ if (photoInput) {
         const file = photoInput.files[0];
         if (file) {
             clearFieldError('item-photo');
-            preview.src          = URL.createObjectURL(file);
-            preview.style.display   = 'block';
+            preview.src = URL.createObjectURL(file);
+            preview.style.display = 'block';
             placeholder.style.display = 'none';
         } else {
-            preview.style.display   = 'none';
+            preview.style.display = 'none';
             placeholder.style.display = 'flex';
         }
     });
@@ -37,7 +36,7 @@ document.querySelectorAll('.type-option input').forEach(radio => {
     radio.addEventListener('change', () => {
         document.querySelectorAll('.type-btn').forEach(btn => btn.classList.remove('active'));
         radio.nextElementSibling.classList.add('active');
-        clearFieldError('type-group');
+        clearFieldError('type-lost');
     });
 });
 
@@ -45,10 +44,10 @@ document.querySelectorAll('.type-option input').forEach(radio => {
 
 function showFieldError(id, msg) {
     clearFieldError(id);
-    const el  = document.getElementById(id);
+    const el = document.getElementById(id);
     const err = document.createElement('p');
-    err.className   = 'field-error';
-    err.id          = `err-${id}`;
+    err.className = 'field-error';
+    err.id = `err-${id}`;
     err.textContent = msg;
 
     if (el) {
@@ -67,13 +66,15 @@ function clearAllErrors() {
 }
 
 function showBanner(msg, type = 'error') {
-    banner.className   = `auth-banner auth-banner--${type}`;
+    if (!banner) return;
+    banner.className = `auth-banner ${type}`;
     banner.textContent = msg;
     banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
 function clearBanner() {
-    banner.className   = '';
+    if (!banner) return;
+    banner.className = '';
     banner.textContent = '';
 }
 
@@ -90,11 +91,6 @@ function validate() {
 
     if (!titleInput.value.trim()) {
         showFieldError('item-title', 'Title is required.');
-        valid = false;
-    }
-
-    if (!categoryEl.value) {
-        showFieldError('item-category', 'Please select a category.');
         valid = false;
     }
 
@@ -124,7 +120,6 @@ if (form) {
         const formData = new FormData();
         formData.append('type',        document.querySelector('input[name="type"]:checked').value);
         formData.append('title',       titleInput.value.trim());
-        formData.append('category',    categoryEl.value);
         formData.append('location',    locationEl.value.trim());
         formData.append('date',        dateEl.value);
         formData.append('description', descEl.value.trim());
@@ -133,13 +128,13 @@ if (form) {
             formData.append('photo', photoInput.files[0]);
         }
 
-        submitBtn.disabled    = true;
+        submitBtn.disabled = true;
         submitBtn.textContent = 'Posting...';
 
         try {
-            const res    = await fetch('../php/post_item.php', {
+            const res = await fetch('../php/post_item.php', {
                 method: 'POST',
-                body:   formData
+                body: formData
             });
             const result = await res.json();
 
@@ -152,7 +147,7 @@ if (form) {
         } catch (err) {
             showBanner('Could not connect to the server. Please try again.');
         } finally {
-            submitBtn.disabled    = false;
+            submitBtn.disabled = false;
             submitBtn.textContent = 'Post Item';
         }
     });

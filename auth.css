@@ -27,6 +27,7 @@ main{
     background-color: white;
     padding: 30px;
     box-shadow: 1px 1px 15px rgba(0,0,0,0.05);
+   
 }
 
 .register-form p:not(.field-error) {
