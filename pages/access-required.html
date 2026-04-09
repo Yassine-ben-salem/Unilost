@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      if (localStorage.getItem("unilost_user")) {
+        document.documentElement.classList.add("has-saved-user");
+      }
+    </script>
+    <title>Access Required</title>
+    <link rel="stylesheet" href="../style.css" />
+    <link rel="stylesheet" href="../auth.css" />
+    <link rel="stylesheet" href="../access.css" />
+  </head>
+  <body>
+    <header class="header">
+      <div class="logo-container" onclick="location.href = '/'">
+        <img src="../assets/images/logo.jpg" height="50px" />
+        <h3 class="logo">UniLost</h3>
+      </div>
+      <nav class="nav-bar">
+        <a href="/">Home</a>
+        <a href="lost.html">Lost Objects</a>
+        <a href="found.html">Found Objects</a>
+      </nav>
+      <div class="auth">
+        <a class="login-btn" href="login.html">Login</a>
+        <a class="register-btn" href="register.html">Register</a>
+      </div>
+    </header>
+    <hr class="separator" />
+    <main class="page-load">
+      <div class="back-link-shell">
+        <a class="back-link" href="javascript:history.back()">
+          <span class="back-link-icon" aria-hidden="true">&larr;</span>
+          <span>Back</span>
+        </a>
+      </div>
+      <section class="access-shell">
+        <div class="access-card">
+          <div class="access-eyebrow">
+            <span>Access Required</span>
+          </div>
+          <h1>Join UniLost To Continue</h1>
+          <p id="access-message">
+            Create an account or sign in to browse lost and found posts.
+          </p>
+          <div class="access-actions">
+            <a class="login-btn" id="access-login-link" href="login.html"
+              >Login</a
+            >
+            <a
+              class="register-btn"
+              id="access-register-link"
+              href="register.html"
+              >Register</a
+            >
+          </div>
+        </div>
+      </section>
+    </main>
+    <hr class="separator" />
+    <footer>
+      <div class="footer-content" style="--reveal-delay: 120ms">
+        <div class="footer-description">
+          <div>
+            <img class="footer-logo" src="../assets/images/logo.jpg" alt="." />
+          </div>
+          <div>
+            <h3>Unilost</h3>
+            <p>Reuniting students with their belongings</p>
+          </div>
+        </div>
+        <div class="copyright">
+          <p>Â© 2026 UniLost. Made for the students</p>
+        </div>
+      </div>
+    </footer>
+    <script src="../assets/js/auth.js" defer></script>
+    <script src="../assets/js/access-required.js" defer></script>
+  </body>
+</html>

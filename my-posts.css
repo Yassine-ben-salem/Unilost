@@ -1,6 +1,6 @@
 .my-posts-intro{
     text-align: center;
-    margin-top: 120px;
+    margin-top: 25px;
 }
 
 .my-posts-title-container{
@@ -100,8 +100,13 @@
 }
 
 .posts-container.is-loading{
-    opacity: 0.72;
+    opacity: 1;
     transition: opacity 0.2s ease;
+}
+
+.posts-container.is-fetching{
+    opacity: 0.55;
+    transition: opacity 0.18s ease;
 }
 
 .post-card-meta{

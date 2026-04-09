@@ -55,3 +55,17 @@ function items_support_resolution(PDO $pdo): bool
 
     return $supportsResolution;
 }
+
+function remove_item_photo(?string $photoPath): void
+{
+    if (!$photoPath) {
+        return;
+    }
+
+    $config = require __DIR__ . '/config.php';
+    $fullPath = $config['upload_dir'] . DIRECTORY_SEPARATOR . basename($photoPath);
+
+    if (is_file($fullPath)) {
+        @unlink($fullPath);
+    }
+}

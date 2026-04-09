@@ -6,22 +6,34 @@
       name="viewport"
       content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
     />
+    <script>
+      if (localStorage.getItem("unilost_user")) {
+        document.documentElement.classList.add("has-saved-user");
+      }
+    </script>
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Found Items</title>
+    <script>
+      (function () {
+        const raw = localStorage.getItem("unilost_user");
+        if (raw) return;
+        const redirect = "found.html";
+        window.location.replace(
+          `access-required.html?redirect=${encodeURIComponent(redirect)}`,
+        );
+      })();
+    </script>
     <link rel="stylesheet" href="../style.css" />
     <link rel="stylesheet" href="../found.css" />
   </head>
   <body>
     <header class="header">
-      <div
-        class="logo-container"
-        onclick="window.location.href = '../index.html'"
-      >
+      <div class="logo-container" onclick="window.location.href = '/'">
         <img src="../assets/images/logo.jpg" height="50px" />
         <h3 class="logo">UniLost</h3>
       </div>
       <nav class="nav-bar">
-        <a href="../index.html">Home</a>
+        <a href="/">Home</a>
         <a href="lost.html">Lost Objects</a>
         <a href="found.html">Found Objects</a>
       </nav>
@@ -32,6 +44,12 @@
     </header>
     <hr class="separator" />
     <main class="page-load">
+      <div class="back-link-shell">
+        <a class="back-link" href="javascript:history.back()">
+          <span class="back-link-icon" aria-hidden="true">&larr;</span>
+          <span>Back</span>
+        </a>
+      </div>
       <div class="found-intro">
         <div class="found-title-container">
           <img src="../assets/images/green-box.png" width="15px" />
@@ -44,34 +62,7 @@
         </p>
       </div>
       <div class="found-posts" style="--reveal-delay: 120ms">
-        <div class="posts-container">
-          <div class="post-card">
-            <span class="post-status is-found">FOUND</span>
-            <div class="post-image-container">
-              <img class="post-image" src="../assets/images/no-photo.png" />
-            </div>
-            <h3 class="post-title">Stainless Steel Water Bottle</h3>
-            <p class="post-desc">
-              Silver bottle with a blue cap, slight dent near the bottom.
-            </p>
-            <div class="post-meta">
-              <div class="details-container">
-                <img
-                  src="../assets/images/gray-location.png"
-                  class="location-icon"
-                />
-                <span class="post-place">Library - 2nd Floor</span><br />
-              </div>
-              <div class="details-container">
-                <img
-                  src="../assets/images/calendar.png"
-                  class="calendar-icon"
-                />
-                <span class="post-date">2026-02-04</span>
-              </div>
-            </div>
-          </div>
-        </div>
+        <div class="posts-container"></div>
       </div>
     </main>
   </body>
@@ -93,6 +84,6 @@
     </div>
   </footer>
   <script src="../assets/js/auth.js" defer></script>
-  <script src="../assets/js/gurad.js" defer></script>
+  <script src="../assets/js/guard.js" defer></script>
   <script src="../assets/js/posts.js" defer></script>
 </html>

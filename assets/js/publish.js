@@ -19,14 +19,23 @@ if (dateEl) {
 if (photoInput) {
     photoInput.addEventListener('change', () => {
         const file = photoInput.files[0];
+        const uploadArea = preview?.closest('.photo-upload-area');
+
         if (file) {
             clearFieldError('item-photo');
             preview.src = URL.createObjectURL(file);
             preview.style.display = 'block';
-            placeholder.style.display = 'none';
+            uploadArea?.classList.add('has-image');
+            if (placeholder) {
+                placeholder.style.display = 'none';
+            }
         } else {
             preview.style.display = 'none';
-            placeholder.style.display = 'flex';
+            preview.removeAttribute('src');
+            uploadArea?.classList.remove('has-image');
+            if (placeholder) {
+                placeholder.style.display = 'flex';
+            }
         }
     });
 }

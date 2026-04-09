@@ -1,68 +1,86 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
+    <script>
+      if (localStorage.getItem("unilost_user")) {
+        document.documentElement.classList.add("has-saved-user");
+      }
+    </script>
     <title>Login</title>
-    <link rel="stylesheet" href="../style.css">
-    <link rel="stylesheet" href="../auth.css">
-</head>
-<body>
-<header class="header">
-    <div class="logo-container" onclick="location.href='../index.html'">
-        <img src="../assets/images/logo.jpg" height="50px">
+    <link rel="stylesheet" href="../style.css" />
+    <link rel="stylesheet" href="../auth.css" />
+  </head>
+  <body>
+    <header class="header">
+      <div class="logo-container" onclick="location.href = '/'">
+        <img src="../assets/images/logo.jpg" height="50px" />
         <h3 class="logo">UniLost</h3>
-    </div>
-    <nav class="nav-bar">
-        <a href="../index.html">Home</a>
+      </div>
+      <nav class="nav-bar">
+        <a href="/">Home</a>
         <a href="lost.html">Lost Objects</a>
         <a href="found.html">Found Objects</a>
-    </nav>
-    <div class="auth">
+      </nav>
+      <div class="auth">
         <a class="login-btn" href="login.html">Login</a>
         <a class="register-btn" href="register.html">Register</a>
-    </div>
-</header>
-<hr class="separator">
-<main class="page-load">
-    <img class="main-logo" src="../assets/images/logo.jpg" width="50px">
-    <div class="title-container " style="--reveal-delay: 80ms;" >
+      </div>
+    </header>
+    <hr class="separator" />
+    <main class="page-load">
+      <div class="back-link-shell">
+        <a class="back-link" href="javascript:history.back()">
+          <span class="back-link-icon" aria-hidden="true">&larr;</span>
+          <span>Back</span>
+        </a>
+      </div>
+      <img class="main-logo" src="../assets/images/logo.jpg" width="50px" />
+      <div class="title-container" style="--reveal-delay: 80ms">
         <h1 class="main-title">Welcome Back</h1>
         <p>Sign in to your UniLost account</p>
-    </div>
-    <form action="#" method="post" class="register-form " style="--reveal-delay: 140ms;">
+      </div>
+      <form
+        action="#"
+        method="post"
+        class="register-form"
+        style="--reveal-delay: 140ms"
+      >
         <label for="Email">Email</label>
-        <div >
-            <img src="../assets/images/black-email.png">
-            <input id="Email" type="email" placeholder="Enter your Email">
+        <div>
+          <img src="../assets/images/black-email.png" />
+          <input id="Email" type="email" placeholder="Enter your Email" />
         </div>
         <label for="Password">Password</label>
         <div>
-            <img src="../assets/images/padlock.png">
-            <input id="Password" type="password" placeholder="Enter your Password">
-
+          <img src="../assets/images/padlock.png" />
+          <input
+            id="Password"
+            type="password"
+            placeholder="Enter your Password"
+          />
         </div>
         <button type="submit" class="register-btn">Sign in</button>
         <p>Don't have an account? <a href="register.html">Register here</a></p>
-    </form>
-</main>
-<hr class="separator">
-</body>
-<footer>
-    <div class="footer-content " style="--reveal-delay: 120ms;">
-        <div class="footer-description">
-            <div>
-                <img class="footer-logo" src="../assets/images/logo.jpg" alt=".">
-            </div>
-            <div>
-                <h3>Unilost</h3>
-                <p>Reuniting students with their belongings</p>
-            </div>
+      </form>
+    </main>
+    <hr class="separator" />
+  </body>
+  <footer>
+    <div class="footer-content" style="--reveal-delay: 120ms">
+      <div class="footer-description">
+        <div>
+          <img class="footer-logo" src="../assets/images/logo.jpg" alt="." />
         </div>
-        <div class="copyright">
-            <p>© 2026 UniLost. Made for the students</p>
+        <div>
+          <h3>Unilost</h3>
+          <p>Reuniting students with their belongings</p>
         </div>
+      </div>
+      <div class="copyright">
+        <p>© 2026 UniLost. Made for the students</p>
+      </div>
     </div>
-
-</footer>
-<script src="../assets/js/auth.js" defer></script>
+  </footer>
+  <script src="../assets/js/auth.js" defer></script>
 </html>

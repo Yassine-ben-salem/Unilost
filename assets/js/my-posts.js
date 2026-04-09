@@ -11,6 +11,25 @@ function getDetailsPath(item) {
     return `${page}?id=${encodeURIComponent(item.id)}`;
 }
 
+function createSkeletonCards(count = 4) {
+    return Array.from({ length: count }, () => `
+      <div class="post-card skeleton-card" aria-hidden="true">
+        <div class="post-card-meta">
+          <span class="post-status skeleton-pill"></span>
+          <span class="skeleton-line skeleton-meta short"></span>
+        </div>
+        <div class="post-image-container skeleton-block skeleton-image"></div>
+        <div class="skeleton-line skeleton-title"></div>
+        <div class="skeleton-line skeleton-text"></div>
+        <div class="skeleton-line skeleton-text short"></div>
+        <div class="post-meta">
+          <div class="skeleton-line skeleton-meta"></div>
+          <div class="skeleton-line skeleton-meta short"></div>
+        </div>
+      </div>
+    `).join('');
+}
+
 function formatResolvedDate(value) {
     if (!value) {
         return '';
@@ -71,6 +90,58 @@ function createPostCard(item) {
     `;
 }
 
+const myPostsState = {
+    cache: {
+        active: null,
+        resolved: null
+    },
+    currentStatus: null,
+    isFirstLoad: true,
+    scrollY: 0
+};
+
+function rememberScrollPosition() {
+    myPostsState.scrollY = window.scrollY || window.pageYOffset || 0;
+}
+
+function restoreScrollPosition() {
+    window.requestAnimationFrame(() => {
+        window.scrollTo({
+            top: myPostsState.scrollY,
+            left: 0,
+            behavior: 'auto'
+        });
+    });
+}
+
+function renderPosts(status, items) {
+    const container = document.querySelector('.posts-container');
+    const feedback = document.querySelector('.my-posts-feedback');
+
+    if (!container || !feedback) {
+        return;
+    }
+
+    feedback.hidden = true;
+    feedback.textContent = '';
+
+    if (!Array.isArray(items) || items.length === 0) {
+        const emptyMessage = status === 'resolved'
+            ? 'No resolved posts yet.'
+            : 'You have not published any active posts yet.';
+        container.innerHTML = `<p>${emptyMessage}</p>`;
+        container.classList.remove('is-loading', 'is-fetching');
+        container.classList.add('is-switching');
+        restoreScrollPosition();
+        return;
+    }
+
+    container.innerHTML = items.map(createPostCard).join('');
+    container.classList.remove('is-loading', 'is-fetching');
+    container.classList.add('is-switching');
+    restoreScrollPosition();
+}
+
 async function loadMyPosts(status) {
     const container = document.querySelector('.posts-container');
     const feedback = document.querySelector('.my-posts-feedback');
@@ -79,8 +150,19 @@ async function loadMyPosts(status) {
         return;
     }
 
+    myPostsState.currentStatus = status;
     container.classList.remove('is-switching');
-    container.classList.add('is-loading');
+
+    if (myPostsState.isFirstLoad) {
+        container.classList.add('is-loading');
+        container.innerHTML = createSkeletonCards(4);
+    } else if (myPostsState.cache[status]) {
+        renderPosts(status, myPostsState.cache[status]);
+        return;
+    } else {
+        container.classList.add('is-fetching');
+    }
+
     feedback.hidden = true;
     feedback.textContent = '';
 
@@ -90,30 +172,31 @@ async function loadMyPosts(status) {
         });
         const data = await res.json();
 
+        if (myPostsState.currentStatus !== status) {
+            return;
+        }
+
         if (!data.success) {
             container.innerHTML = '<p>Could not load your posts right now.</p>';
-            container.classList.remove('is-loading');
+            container.classList.remove('is-loading', 'is-fetching');
             feedback.hidden = false;
             feedback.textContent = data.message || 'Please try again in a moment.';
+            restoreScrollPosition();
             return;
         }
 
-        if (!Array.isArray(data.items) || data.items.length === 0) {
-            const emptyMessage = status === 'resolved'
-                ? 'No resolved posts yet.'
-                : 'You have not published any active posts yet.';
-            container.innerHTML = `<p>${emptyMessage}</p>`;
-            container.classList.remove('is-loading');
-            container.classList.add('is-switching');
-            return;
-        }
-
-        container.innerHTML = data.items.map(createPostCard).join('');
-        container.classList.remove('is-loading');
-        container.classList.add('is-switching');
+        myPostsState.cache[status] = Array.isArray(data.items) ? data.items : [];
+        renderPosts(status, myPostsState.cache[status]);
     } catch (error) {
+        if (myPostsState.currentStatus !== status) {
+            return;
+        }
+
         container.innerHTML = '<p>Could not load your posts right now.</p>';
-        container.classList.remove('is-loading');
+        container.classList.remove('is-loading', 'is-fetching');
+        restoreScrollPosition();
+    } finally {
+        myPostsState.isFirstLoad = false;
     }
 }
 
@@ -124,6 +207,11 @@ function setupFilters() {
         button.addEventListener('click', () => {
             const status = button.dataset.status || 'active';
 
+            if (status === myPostsState.currentStatus) {
+                return;
+            }
+
+            rememberScrollPosition();
             buttons.forEach((candidate) => candidate.classList.remove('active'));
             button.classList.add('active');
             loadMyPosts(status);

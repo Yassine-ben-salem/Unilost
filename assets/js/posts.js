@@ -32,6 +32,22 @@ function getPostsConfig() {
     return null;
 }
 
+function createSkeletonCards(count = 4) {
+    return Array.from({ length: count }, () => `
+      <div class="post-card skeleton-card" aria-hidden="true">
+        <span class="post-status skeleton-pill"></span>
+        <div class="post-image-container skeleton-block skeleton-image"></div>
+        <div class="skeleton-line skeleton-title"></div>
+        <div class="skeleton-line skeleton-text"></div>
+        <div class="skeleton-line skeleton-text short"></div>
+        <div class="post-meta">
+          <div class="skeleton-line skeleton-meta"></div>
+          <div class="skeleton-line skeleton-meta short"></div>
+        </div>
+      </div>
+    `).join('');
+}
+
 function createPostCard(item) {
     const statusClass = item.type === 'found' ? 'is-found' : 'is-lost';
     const statusLabel = item.type.toUpperCase();
@@ -95,24 +111,29 @@ async function loadPosts() {
 
     if (!config || !container) return;
 
-    container.innerHTML = '<p>Loading posts...</p>';
+    container.innerHTML = createSkeletonCards(window.location.pathname.includes('/pages/') ? 6 : 4);
+    container.classList.add('is-skeleton-loading');
 
     try {
         const res = await fetch(config.endpoint);
         const data = await res.json();
 
         if (!data.success) {
+            container.classList.remove('is-skeleton-loading');
             container.innerHTML = '<p>Could not load posts right now.</p>';
             return;
         }
 
         if (!Array.isArray(data.items) || data.items.length === 0) {
+            container.classList.remove('is-skeleton-loading');
             container.innerHTML = `<p>${config.emptyMessage}</p>`;
             return;
         }
 
+        container.classList.remove('is-skeleton-loading');
         container.innerHTML = data.items.map(createPostCard).join('');
     } catch (error) {
+        container.classList.remove('is-skeleton-loading');
         container.innerHTML = '<p>Could not load posts right now.</p>';
     }
 }

@@ -39,6 +39,11 @@ function getStoredUser() {
     return raw ? JSON.parse(raw) : null;
 }
 
+function isOwner(item) {
+    const user = getStoredUser();
+    return Boolean(user) && Number(user.id) === Number(item.user_id);
+}
+
 async function copyText(text) {
     if (navigator.clipboard && window.isSecureContext) {
         await navigator.clipboard.writeText(text);
@@ -58,6 +63,125 @@ async function copyText(text) {
     return copied;
 }
 
+function getActionElements() {
+    return {
+        bar: document.querySelector('.post-confirmation-bar'),
+        title: document.querySelector('.post-confirmation-title'),
+        text: document.querySelector('.post-confirmation-text'),
+        cancel: document.querySelector('.confirmation-cancel-btn'),
+        confirm: document.querySelector('.confirmation-confirm-btn')
+    };
+}
+
+function setManageFeedback(message = '', type = 'neutral') {
+    const feedback = document.querySelector('.resolve-feedback');
+
+    if (!feedback) {
+        return;
+    }
+
+    window.clearTimeout(feedback.hideTimer);
+
+    if (!message) {
+        feedback.classList.remove('is-visible', 'is-hiding');
+        feedback.hidden = true;
+        feedback.textContent = '';
+        feedback.dataset.type = '';
+        return;
+    }
+
+    feedback.hidden = false;
+    feedback.textContent = message;
+    feedback.dataset.type = type;
+    feedback.classList.remove('is-hiding');
+
+    window.requestAnimationFrame(() => {
+        feedback.classList.add('is-visible');
+    });
+
+    if (type === 'success') {
+        feedback.hideTimer = window.setTimeout(() => {
+            feedback.classList.remove('is-visible');
+            feedback.classList.add('is-hiding');
+
+            window.setTimeout(() => {
+                feedback.hidden = true;
+                feedback.classList.remove('is-hiding');
+                feedback.textContent = '';
+                feedback.dataset.type = '';
+            }, 220);
+        }, 2600);
+    }
+}
+
+function hideConfirmationBar() {
+    const { bar, cancel, confirm } = getActionElements();
+
+    if (!bar || !cancel || !confirm) {
+        return;
+    }
+
+    bar.classList.remove('is-visible');
+    bar.classList.add('is-hiding');
+    bar.dataset.intent = '';
+    cancel.disabled = false;
+    confirm.disabled = false;
+    cancel.textContent = 'Cancel';
+    confirm.textContent = 'Confirm';
+    confirm.className = 'confirmation-confirm-btn';
+
+    window.clearTimeout(bar.hideTimer);
+    bar.hideTimer = window.setTimeout(() => {
+        bar.hidden = true;
+        bar.classList.remove('is-hiding');
+    }, 220);
+}
+
+function showConfirmationBar(config) {
+    const { bar, title, text, cancel, confirm } = getActionElements();
+
+    if (!bar || !title || !text || !cancel || !confirm) {
+        return;
+    }
+
+    window.clearTimeout(bar.hideTimer);
+    bar.hidden = false;
+    bar.classList.remove('is-hiding');
+    bar.dataset.intent = config.intent;
+    title.textContent = config.title;
+    text.textContent = config.text;
+    confirm.textContent = config.confirmLabel;
+    confirm.className = `confirmation-confirm-btn ${config.confirmClass || ''}`.trim();
+    cancel.textContent = 'Cancel';
+    cancel.disabled = false;
+    confirm.disabled = false;
+
+    window.requestAnimationFrame(() => {
+        bar.classList.add('is-visible');
+    });
+
+    cancel.onclick = () => {
+        hideConfirmationBar();
+        setManageFeedback('');
+    };
+
+    confirm.onclick = async () => {
+        cancel.disabled = true;
+        confirm.disabled = true;
+        confirm.textContent = config.pendingLabel || 'Saving...';
+
+        try {
+            await config.onConfirm();
+            hideConfirmationBar();
+        } catch (error) {
+            cancel.disabled = false;
+            confirm.disabled = false;
+            confirm.textContent = config.confirmLabel;
+            setManageFeedback(error.message || 'Could not complete that action right now.', 'error');
+        }
+    };
+}
+
 function updateResolvedState(item) {
     const contactContainer = document.querySelector('.contact-container');
     const contactHeading = document.querySelector('.contact-container h3');
@@ -65,8 +189,28 @@ function updateResolvedState(item) {
     const contactEmailRow = document.querySelector('.contact-email-row');
     const contactEmailValue = document.querySelector('.contact-email-value');
     const copyEmailButton = document.querySelector('.copy-email-btn');
-    const undoButton = document.querySelector('.undo-resolve-btn');
+    const status = document.querySelector('.item-status');
     const contactCopy = getStatusCopy(item.type);
+    const ownerViewing = isOwner(item);
+
+    if (contactContainer) {
+        contactContainer.hidden = ownerViewing;
+    }
+
+    if (ownerViewing) {
+        return;
+    }
+
+    if (status) {
+        status.textContent = item.status === 'resolved' ? 'RESOLVED' : item.type.toUpperCase();
+        status.classList.remove('is-found', 'is-lost', 'is-resolved');
+
+        if (item.status === 'resolved') {
+            status.classList.add('is-resolved');
+        } else {
+            status.classList.add(item.type === 'found' ? 'is-found' : 'is-lost');
+        }
+    }
 
     if (item.status !== 'resolved') {
         if (contactContainer) {
@@ -91,10 +235,6 @@ function updateResolvedState(item) {
 
         if (copyEmailButton) {
             copyEmailButton.hidden = false;
-        }
-
-        if (undoButton) {
-            undoButton.remove();
         }
 
         return;
@@ -129,137 +269,128 @@ function updateResolvedState(item) {
     }
 }
 
-function renderUndoResolveButton(item) {
-    const user = getStoredUser();
-    const contactContainer = document.querySelector('.contact-container');
-    const existingButton = document.querySelector('.undo-resolve-btn');
-
-    if (existingButton) {
-        existingButton.remove();
+function buildManageCopy(item) {
+    if (item.status === 'resolved') {
+        return {
+            text: 'This post is currently resolved. You can reactivate it if the item still needs attention.'
+        };
     }
 
-    if (!contactContainer || !user || Number(user.id) !== Number(item.user_id) || item.status !== 'resolved') {
-        return;
-    }
-
-    const undoButton = document.createElement('button');
-    undoButton.type = 'button';
-    undoButton.className = 'undo-resolve-btn';
-    undoButton.textContent = 'Make Active Again';
-
-    undoButton.addEventListener('click', async () => {
-        const confirmed = window.confirm('Undo this resolved status and return the post to the public lists?');
-
-        if (!confirmed) {
-            return;
-        }
-
-        undoButton.disabled = true;
-        undoButton.textContent = 'Saving...';
-
-        try {
-            const res = await fetch('../php/update_item_status.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    item_id: item.id,
-                    status: 'active'
-                })
-            });
-            const data = await res.json();
-
-            if (!data.success) {
-                undoButton.disabled = false;
-                undoButton.textContent = 'Undo Resolve';
-                return;
-            }
-
-            item.status = 'active';
-            item.resolved_at = null;
-            updateResolvedState(item);
-            setupResolveButton(item);
-        } catch (error) {
-            undoButton.disabled = false;
-            undoButton.textContent = 'Undo Resolve';
-        }
-    });
-
-    contactContainer.appendChild(undoButton);
+    return {
+        text: item.type === 'found'
+            ? 'If this item has been returned to its owner, you can mark the post as resolved or delete it.'
+            : 'If this item has been returned, you can mark the post as resolved or delete it.'
+    };
 }
 
-function setupResolveButton(item) {
-    const user = getStoredUser();
+async function updateItemStatus(item, status) {
+    const res = await fetch('../php/update_item_status.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            item_id: item.id,
+            status
+        })
+    });
+    const data = await res.json();
+
+    if (!data.success) {
+        throw new Error(data.message || 'Could not update this post right now.');
+    }
+
+    item.status = status;
+    item.resolved_at = data.resolved_at || null;
+    updateResolvedState(item);
+    setupManageActions(item);
+    setManageFeedback(
+        status === 'resolved'
+            ? 'Resolved successfully'
+            : 'Post is active again',
+        'success'
+    );
+}
+
+async function deleteItem(item) {
+    const res = await fetch('../php/delete_item.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            item_id: item.id
+        })
+    });
+    const data = await res.json();
+
+    if (!data.success) {
+        throw new Error(data.message || 'Could not delete this post right now.');
+    }
+
+    window.location.href = 'my-posts.html';
+}
+
+function setupManageActions(item) {
     const manageContainer = document.querySelector('.post-manage-container');
     const manageText = document.querySelector('.post-manage-text');
     const resolveButton = document.querySelector('.resolve-post-btn');
-    const resolveFeedback = document.querySelector('.resolve-feedback');
+    const deleteButton = document.querySelector('.delete-post-btn');
 
-    if (!manageContainer || !manageText || !resolveButton || !resolveFeedback) {
+    if (!manageContainer || !manageText || !resolveButton || !deleteButton) {
         return;
     }
 
-    if (!user || Number(user.id) !== Number(item.user_id)) {
+    if (!isOwner(item)) {
         manageContainer.hidden = true;
+        hideConfirmationBar();
         return;
     }
+
+    const manageCopy = buildManageCopy(item);
 
     manageContainer.hidden = false;
-
-    if (item.status === 'resolved') {
-        manageContainer.hidden = true;
-        renderUndoResolveButton(item);
-        return;
-    }
-
-    renderUndoResolveButton(item);
-    manageContainer.hidden = false;
+    manageText.textContent = manageCopy.text;
     resolveButton.hidden = false;
     resolveButton.disabled = false;
-    resolveButton.textContent = 'Mark as Resolved';
-    resolveFeedback.hidden = true;
-    resolveFeedback.textContent = '';
+    deleteButton.disabled = false;
+    setManageFeedback('');
 
-    resolveButton.onclick = async () => {
-        const confirmed = window.confirm('Mark this post as resolved? It will be removed from the public lists.');
-
-        if (!confirmed) {
-            return;
-        }
-
-        resolveButton.disabled = true;
-        resolveButton.textContent = 'Saving...';
-        resolveFeedback.hidden = true;
-        resolveFeedback.textContent = '';
-
-        try {
-            const res = await fetch('../php/update_item_status.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    item_id: item.id,
-                    status: 'resolved'
-                })
+    if (item.status === 'resolved') {
+        resolveButton.textContent = 'Make Active Again';
+        resolveButton.classList.add('is-secondary');
+        resolveButton.onclick = () => {
+            showConfirmationBar({
+                intent: 'activate',
+                title: 'Move this post back to active?',
+                text: 'The post will appear in the public lists again so people can keep helping.',
+                confirmLabel: 'Make Active',
+                confirmClass: 'is-secondary',
+                pendingLabel: 'Updating...',
+                onConfirm: () => updateItemStatus(item, 'active')
             });
-            const data = await res.json();
+        };
+    } else {
+        resolveButton.textContent = 'Mark as Resolved';
+        resolveButton.classList.remove('is-secondary');
+        resolveButton.onclick = () => {
+            showConfirmationBar({
+                intent: 'resolve',
+                title: 'Mark this post as resolved?',
+                text: 'It will be removed from the public lost and found lists, but you can reactivate it later.',
+                confirmLabel: 'Confirm Resolve',
+                pendingLabel: 'Updating...',
+                onConfirm: () => updateItemStatus(item, 'resolved')
+            });
+        };
+    }
 
-            if (!data.success) {
-                resolveFeedback.hidden = false;
-                resolveFeedback.textContent = data.message || 'Could not update this post right now.';
-                resolveButton.disabled = false;
-                resolveButton.textContent = 'Mark as Resolved';
-                return;
-            }
-
-            item.status = 'resolved';
-            item.resolved_at = data.resolved_at || item.resolved_at;
-            updateResolvedState(item);
-            setupResolveButton(item);
-        } catch (error) {
-            resolveFeedback.hidden = false;
-            resolveFeedback.textContent = 'Could not connect to the server. Please try again.';
-            resolveButton.disabled = false;
-            resolveButton.textContent = 'Mark as Resolved';
-        }
+    deleteButton.onclick = () => {
+        showConfirmationBar({
+            intent: 'delete',
+            title: 'Delete this post permanently?',
+            text: 'This action cannot be undone. The post and its uploaded photo will be removed.',
+            confirmLabel: 'Delete Post',
+            confirmClass: 'is-danger',
+            pendingLabel: 'Deleting...',
+            onConfirm: () => deleteItem(item)
+        });
     };
 }
 
@@ -283,7 +414,6 @@ async function loadItemDetails() {
         const contactCopy = getStatusCopy(item.type);
         const image = document.querySelector('.item-image');
         const imageContainer = document.querySelector('.item-image-container');
-        const status = document.querySelector('.item-status');
         const title = document.querySelector('.item-title');
         const location = document.querySelector('.item-place');
         const date = document.querySelector('.item-date');
@@ -308,12 +438,6 @@ async function loadItemDetails() {
             imageContainer.classList.toggle('has-photo', Boolean(item.photo_path));
         }
 
-        if (status) {
-            status.textContent = item.type.toUpperCase();
-            status.classList.remove('is-found', 'is-lost');
-            status.classList.add(item.type === 'found' ? 'is-found' : 'is-lost');
-        }
-
         if (title) title.textContent = item.title;
         if (location) location.textContent = item.location;
         if (date) date.textContent = item.date;
@@ -324,7 +448,8 @@ async function loadItemDetails() {
         if (contactEmailValue && item.poster_email) {
             contactEmailValue.textContent = item.poster_email;
         }
-        if (copyEmailButton && item.poster_email) {
+
+        if (copyEmailButton && item.poster_email && !isOwner(item)) {
             copyEmailButton.addEventListener('click', async () => {
                 const copied = await copyText(item.poster_email);
                 copyEmailButton.textContent = copied ? 'Copied' : 'Copy failed';
@@ -336,7 +461,7 @@ async function loadItemDetails() {
         }
 
         updateResolvedState(item);
-        setupResolveButton(item);
+        setupManageActions(item);
     } catch (error) {
         // Keep the placeholder content if loading fails.
     }

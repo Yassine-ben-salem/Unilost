@@ -24,6 +24,37 @@ function getRelativePath(page) {
     return window.location.pathname.includes('/pages/') ? page : `pages/${page}`;
 }
 
+function getRequestedRedirectPath(fallback) {
+    const params = new URLSearchParams(window.location.search);
+    const redirect = params.get('redirect') || '';
+
+    if (!redirect) {
+        return fallback;
+    }
+
+    try {
+        const parsed = new URL(redirect, window.location.href);
+        const page = parsed.pathname.split('/').pop() || '';
+        const allowedTargets = new Set([
+            'lost.html',
+            'found.html',
+            'publish.html',
+            'my-posts.html',
+            'lost-details.html',
+            'found-details.html',
+            'all-posts.html'
+        ]);
+
+        if (!allowedTargets.has(page)) {
+            return fallback;
+        }
+
+        return `${page}${parsed.search || ''}`;
+    } catch (error) {
+        return fallback;
+    }
+}
+
 function setupAccountMenu() {
     const menu = document.querySelector('.nav-account-menu');
     const trigger = document.querySelector('.nav-account-trigger');
@@ -237,7 +268,7 @@ if (loginForm) {
 
             if (data.success) {
                 saveUser(data.user);
-                window.location.href = '../index.html';
+                window.location.href = getRequestedRedirectPath('../index.html');
             } else {
                 showBanner(data.message || 'Invalid email or password.');
             }
@@ -282,7 +313,7 @@ if (registerForm) {
 
             if (data.success) {
                 saveUser(data.user);
-                window.location.href = '../index.html';
+                window.location.href = getRequestedRedirectPath('../index.html');
             } else {
                 showBanner(data.message || 'Registration failed. Please try again.');
             }
@@ -297,3 +328,4 @@ if (registerForm) {
 
 updateNavbar();
 updateHomepageCTA();
+document.documentElement.classList.add('auth-ui-ready');

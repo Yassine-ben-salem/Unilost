@@ -6,22 +6,34 @@
       name="viewport"
       content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
     />
+    <script>
+      if (localStorage.getItem("unilost_user")) {
+        document.documentElement.classList.add("has-saved-user");
+      }
+    </script>
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Item details</title>
+    <script>
+      (function () {
+        const raw = localStorage.getItem("unilost_user");
+        if (raw) return;
+        const redirect = `lost-details.html${window.location.search || ""}`;
+        window.location.replace(
+          `access-required.html?redirect=${encodeURIComponent(redirect)}`,
+        );
+      })();
+    </script>
     <link rel="stylesheet" href="../style.css" />
     <link rel="stylesheet" href="../details.css" />
   </head>
   <body>
     <header class="header">
-      <div
-        class="logo-container"
-        onclick="window.location.href = '../index.html'"
-      >
+      <div class="logo-container" onclick="window.location.href = '/'">
         <img src="../assets/images/logo.jpg" height="50px" alt="UniLost logo" />
         <h3 class="logo">UniLost</h3>
       </div>
       <nav class="nav-bar">
-        <a href="../index.html">Home</a>
+        <a href="/">Home</a>
         <a href="lost.html">Lost Objects</a>
         <a href="found.html">Found Objects</a>
       </nav>
@@ -31,6 +43,12 @@
       </div>
     </header>
     <main class="page-load">
+      <div class="item-page-shell">
+        <a class="back-link" href="javascript:history.back()">
+          <span class="back-link-icon" aria-hidden="true">&larr;</span>
+          <span>Back</span>
+        </a>
+      </div>
       <div class="item-card">
         <div class="item-image-container">
           <img
@@ -41,7 +59,7 @@
         </div>
         <div class="item-details">
           <p class="item-status is-lost">LOST</p>
-          <h2 class="item-title">Black Foldable Umbrella</h2>
+          <h2 class="item-title">Loading item...</h2>
           <div class="item-meta">
             <div class="details-container">
               <img
@@ -49,7 +67,7 @@
                 class="location-icon"
                 alt="Location"
               />
-              <span class="item-place">Cafeteria - Near Entrance</span>
+              <span class="item-place">Loading location...</span>
             </div>
             <div class="details-container">
               <img
@@ -57,7 +75,7 @@
                 class="calendar-icon"
                 alt="Date"
               />
-              <span class="item-date">2026-02-06</span>
+              <span class="item-date">Loading date...</span>
             </div>
             <div class="details-container">
               <img
@@ -65,16 +83,13 @@
                 class="user-icon"
                 alt="Poster"
               />
-              <span class="poster">Posted by Alex Morgan</span>
+              <span class="poster">Loading poster...</span>
             </div>
           </div>
           <hr class="separator" />
           <div class="description-container">
             <b class="item-desc-title">Description</b>
-            <p class="item-desc">
-              Compact black umbrella with a wooden handle and a small white
-              sticker on the strap.
-            </p>
+            <p class="item-desc">Loading description...</p>
           </div>
           <div class="post-manage-container" hidden>
             <h3 class="post-manage-title">Manage this post</h3>
@@ -84,6 +99,19 @@
             <button type="button" class="resolve-post-btn">
               Mark as Resolved
             </button>
+            <button type="button" class="delete-post-btn">Delete Post</button>
+            <div class="post-confirmation-bar" hidden>
+              <h3 class="post-confirmation-title">Confirm this action</h3>
+              <p class="post-confirmation-text"></p>
+              <div class="post-confirmation-actions">
+                <button type="button" class="confirmation-cancel-btn">
+                  Cancel
+                </button>
+                <button type="button" class="confirmation-confirm-btn">
+                  Confirm
+                </button>
+              </div>
+            </div>
             <p class="resolve-feedback" hidden></p>
           </div>
           <div class="contact-container">
@@ -93,7 +121,7 @@
             </p>
             <div class="contact-email-block">
               <div class="contact-email-row">
-                <span class="contact-email-value">name@email.com</span>
+                <span class="contact-email-value">Loading contact...</span>
                 <button type="button" class="copy-email-btn">Copy</button>
               </div>
             </div>

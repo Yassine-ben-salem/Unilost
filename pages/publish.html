@@ -2,6 +2,11 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <script>
+      if (localStorage.getItem("unilost_user")) {
+        document.documentElement.classList.add("has-saved-user");
+      }
+    </script>
     <title>Post an Item</title>
     <link rel="stylesheet" href="../style.css" />
     <link rel="stylesheet" href="../auth.css" />
@@ -9,12 +14,12 @@
   </head>
   <body>
     <header class="header">
-      <div class="logo-container" onclick="location.href = '../index.html'">
+      <div class="logo-container" onclick="location.href = '/'">
         <img src="../assets/images/logo.jpg" height="50px" />
         <h3 class="logo">UniLost</h3>
       </div>
       <nav class="nav-bar">
-        <a href="../index.html">Home</a>
+        <a href="/">Home</a>
         <a href="lost.html">Lost Objects</a>
         <a href="found.html">Found Objects</a>
       </nav>
@@ -26,6 +31,12 @@
 
     <hr class="separator" />
     <main class="page-load">
+      <div class="back-link-shell">
+        <a class="back-link" href="javascript:history.back()">
+          <span class="back-link-icon" aria-hidden="true">&larr;</span>
+          <span>Back</span>
+        </a>
+      </div>
       <div class="title-container">
         <h1 class="main-title">Post an Item</h1>
         <p>Report something you lost or found on campus</p>
@@ -101,7 +112,9 @@
             accept="image/*"
             class="photo-input"
           />
-          <p>Click to upload a photo</p>
+          <div class="photo-placeholder" id="photo-placeholder">
+            <p>Click to upload a photo</p>
+          </div>
           <img
             id="photo-preview"
             class="photo-preview"
