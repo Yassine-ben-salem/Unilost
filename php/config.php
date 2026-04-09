@@ -1,10 +1,13 @@
 <?php
+$host = getenv('MYSQLHOST');
+$user = getenv('MYSQLUSER');
+$pass = getenv('MYSQLPASSWORD');
+$db   = getenv('MYSQLDATABASE');
+$port = getenv('MYSQLPORT');
 
-return [
-    'db_host' => '127.0.0.1',
-    'db_port' => 3306,
-    'db_name' => 'unilost',
-    'db_user' => 'root',
-    'db_pass' => 'root',
-    'upload_dir' => __DIR__ . '/../assets/uploads'
-];
+$conn = mysqli_connect($host, $user, $pass, $db, (int)$port);
+
+if (!$conn) {
+    die("Connection failed: " . mysqli_connect_error());
+}
+?>
