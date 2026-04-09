@@ -1,5 +1,11 @@
 <?php
+$host = getenv('MYSQLHOST');
+$user = getenv('MYSQLUSER');
+$pass = getenv('MYSQLPASSWORD');
+$db   = getenv('MYSQLDATABASE');
+$port = (int)getenv('MYSQLPORT');
 
+<<<<<<< HEAD
 function env_value(array $keys, $default = null)
 {
     foreach ($keys as $key) {
@@ -50,3 +56,11 @@ return [
     'db_pass' => env_value(['MYSQLPASSWORD', 'DB_PASS'], $mysqlUrlConfig['db_pass'] ?? 'root'),
     'upload_dir' => __DIR__ . '/../assets/uploads'
 ];
+=======
+$conn = mysqli_connect($host, $user, $pass, $db, $port);
+
+if (!$conn) {
+    die("Connection failed: " . mysqli_connect_error());
+}
+?>
+>>>>>>> 045a2d9cc45762593d9b40f62ff78b7834d7462e
