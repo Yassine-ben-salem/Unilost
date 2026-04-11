@@ -7,14 +7,12 @@
       content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
     />
     <script>
-      if (localStorage.getItem("unilost_user")) {
+      if (localStorage.getItem("unilost_user"))
         document.documentElement.classList.add("has-saved-user");
-      }
     </script>
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>My Posts</title>
+    <title>Page not found - UniLost</title>
     <link rel="stylesheet" href="../style.css?v=1" />
-    <link rel="stylesheet" href="../my-posts.css?v=1" />
   </head>
   <body>
     <header class="header">
@@ -33,48 +31,21 @@
       </div>
     </header>
     <hr class="separator" />
-    <main class="page-load">
-      <div class="back-link-shell">
-        <a class="back-link" href="javascript:history.back()">
-          <span class="back-link-icon" aria-hidden="true">&larr;</span>
-          <span>Back</span>
-        </a>
-      </div>
-      <section class="my-posts-intro">
-        <h1>Track your active and resolved posts</h1>
-        <p>
-          Switch between live posts and resolved ones to keep your
-          lost-and-found history organized.
+    <main>
+      <div class="not-found-container">
+        <h1 class="not-found-title">Page not found</h1>
+        <p class="not-found-text">
+          The post you're looking for doesn't exist or has been deleted.
         </p>
-      </section>
-
-      <section class="my-posts-shell">
-        <div class="my-posts-toolbar">
-          <div
-            class="my-posts-filters"
-            role="tablist"
-            aria-label="My post filters"
-          >
-            <button
-              type="button"
-              class="filter-btn active"
-              data-status="active"
-            >
-              Active
-            </button>
-            <button type="button" class="filter-btn" data-status="resolved">
-              Resolved
-            </button>
-          </div>
+        <div class="not-found-actions">
+          <a href="javascript:history.back()" class="back-btn">← Go back</a>
+          <a href="../index.html" class="home-btn">Go home</a>
         </div>
-
-        <p class="my-posts-feedback" hidden></p>
-        <div class="posts-container"></div>
-      </section>
+      </div>
     </main>
     <footer>
       <hr class="separator" />
-      <div class="footer-content scroll-reveal">
+      <div class="footer-content">
         <div class="footer-description">
           <div>
             <img class="footer-logo" src="../assets/images/logo.jpg" alt="." />
@@ -91,6 +62,5 @@
     </footer>
     <script src="../assets/js/auth.js?v=1" defer></script>
     <script src="../assets/js/guard.js?v=1" defer></script>
-    <script src="../assets/js/my-posts.js?v=1" defer></script>
   </body>
 </html>

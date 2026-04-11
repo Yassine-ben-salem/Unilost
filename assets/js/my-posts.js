@@ -221,3 +221,11 @@ function setupFilters() {
 
 setupFilters();
 loadMyPosts('active');
+
+window.addEventListener('pageshow', (event) => {
+  if (event.persisted) {
+    myPostsState.cache.active = null;
+    myPostsState.cache.resolved = null;
+    loadMyPosts(myPostsState.currentStatus || 'active');
+  }
+});

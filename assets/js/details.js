@@ -406,7 +406,8 @@ async function loadItemDetails() {
         const res = await fetch(`../php/get_items.php?id=${encodeURIComponent(itemId)}`);
         const data = await res.json();
 
-        if (!data.success || !data.item) {
+if (!data.success || !data.item) {
+            window.location.replace('page-not-found.html');
             return;
         }
 
@@ -468,3 +469,10 @@ async function loadItemDetails() {
 }
 
 loadItemDetails();
+
+window.addEventListener('pageshow', (event) => {
+  if (event.persisted) {
+    loadItemDetails();
+  }
+});
+

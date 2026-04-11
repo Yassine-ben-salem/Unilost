@@ -11,7 +11,8 @@
             '/pages/found.html',
             '/pages/all-posts.html',
             '/pages/lost-details.html',
-            '/pages/found-details.html'
+            '/pages/found-details.html',
+            '/pages/page-not-found.html'
         ];
         const requiresAccessInterstitial = guardedTargets.some((target) => path.endsWith(target));
 

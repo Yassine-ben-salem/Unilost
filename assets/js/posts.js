@@ -139,3 +139,9 @@ async function loadPosts() {
 }
 
 loadPosts();
+
+window.addEventListener('pageshow', (event) => {
+  if (event.persisted) {
+    loadPosts();
+  }
+});

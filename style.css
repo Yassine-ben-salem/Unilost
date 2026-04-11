@@ -11,11 +11,24 @@
     min-height: 100%;
     }
 
-    body {
+body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     }
+
+body,
+p,
+span,
+h1,
+h2,
+h4,
+h5,
+h6,
+li,
+strong{
+    cursor: default;
+}
 
     main {
     flex: 1;
@@ -73,7 +86,6 @@
     font-size: 18px;
     margin-right: 60px;
     cursor: pointer;
-
 }
 
 .logo-container img,
@@ -138,6 +150,93 @@
 .back-link-shell{
     width: min(1100px, calc(100% - 32px));
     margin: 115px auto 0;
+}
+
+ /* PAGE NOT FOUND */
+.not-found-container {
+    max-width: 600px;
+    margin: 120px auto 0;
+    padding: 48px 32px;
+    text-align: center;
+    background: linear-gradient(135deg, hsl(180 20% 98%), hsl(180 20% 100%));
+    border-radius: 20px;
+    border: 1px solid hsl(180 15% 92%);
+    box-shadow: 0 20px 48px rgba(0, 0, 0, 0.08);
+}
+
+.not-found-title {
+    font-size: clamp(2.2rem, 6vw, 3.5rem);
+    font-weight: 800;
+    background: linear-gradient(135deg, hsl(25 95% 50%), hsl(35 95% 55%));
+    color: hsl(35, 100%, 55%);
+    background-clip: text;
+    margin-bottom: 16px;
+    line-height: 1.1;
+}
+
+.not-found-text {
+    font-size: 1.2rem;
+    color: hsl(0 0% 30%);
+    margin-bottom: 32px;
+    line-height: 1.6;
+}
+
+.not-found-actions {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.back-btn, .home-btn {
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 15px;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.back-btn {
+    background: white;
+    color: hsl(0 0% 25%);
+    border: 2px solid hsl(180 15% 85%);
+}
+
+.back-btn:hover {
+    background: hsl(180 20% 96%);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(28, 158, 165, 0.15);
+}
+
+.home-btn {
+    background: linear-gradient(135deg, hsl(179 60% 43%), hsl(185 67% 46%));
+    color: white;
+    box-shadow: 0 8px 24px rgba(28, 158, 165, 0.3);
+}
+
+.home-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(28, 158, 165, 0.4);
+}
+
+@media (max-width: 640px) {
+    .not-found-container {
+        margin: 100px auto 0;
+        padding: 32px 24px;
+    }
+    
+    .not-found-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .back-btn, .home-btn {
+        justify-content: center;
+    }
 }
 
 .back-link{

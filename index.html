@@ -9,7 +9,7 @@
       }
     </script>
     <title>Unilost</title>
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="style.css?v=1" />
     <link rel="icon" href="assets/images/green-location.png" />
   </head>
   <body>
@@ -50,11 +50,17 @@
           Report what you've lost or found, and let the community help.
         </p>
         <div class="browse-btns">
-          <div class="browse-lost-container">
+          <div
+            class="browse-lost-container"
+            onclick="window.location.href = 'pages/lost.html'"
+          >
             <img src="assets/images/search.png" width="20px" />
             <a class="lost-btn" href="pages/lost.html">Browse Lost Items</a>
           </div>
-          <div class="browse-found-container">
+          <div
+            class="browse-found-container"
+            onclick="window.location.href = 'pages/found.html'"
+          >
             <img src="assets/images/box.png" width="20px" />
             <a class="found-btn" href="pages/found.html">Browse Found Items</a>
           </div>
@@ -106,9 +112,9 @@
       </div>
     </div>
   </footer>
-  <script src="assets/js/auth.js" defer></script>
-  <script src="assets/js/posts.js" defer></script>
-  
+  <script src="assets/js/auth.js?v=1" defer></script>
+  <script src="assets/js/posts.js?v=1" defer></script>
+
   <script>
     function goToDetails(element) {
       const status = element.querySelector(".post-status");
