@@ -29,13 +29,12 @@
         );
       })();
     </script>
-    <link rel="stylesheet" href="../style.css?v=1" />
-    <link rel="stylesheet" href="../details.css?v=1" />
+    <link rel="stylesheet" href="../style-bundle.min.css?v=1" />
   </head>
   <body>
     <header class="header">
       <div class="logo-container" onclick="window.location.href = '/'">
-        <img src="../assets/images/logo.jpg" height="50px" alt="UniLost logo" />
+        <img src="../assets/images/logo.jpg" height="50px" alt="UniLost logo" loading="lazy" />
         <h3 class="logo">UniLost</h3>
       </div>
       <nav class="nav-bar">
@@ -61,6 +60,7 @@
             class="item-image"
             src="../assets/images/no-photo.png"
             alt="Item photo placeholder"
+            loading="lazy"
           />
         </div>
         <div class="item-details">
@@ -72,6 +72,7 @@
                 src="../assets/images/gray-location.png"
                 class="location-icon"
                 alt="Location"
+                loading="lazy"
               />
               <span class="item-place">Loading location...</span>
             </div>
@@ -80,6 +81,7 @@
                 src="../assets/images/calendar.png"
                 class="calendar-icon"
                 alt="Date"
+                loading="lazy"
               />
               <span class="item-date">Loading date...</span>
             </div>
@@ -88,6 +90,7 @@
                 src="../assets/images/gray-user.png"
                 class="user-icon"
                 alt="Poster"
+                loading="lazy"
               />
               <span class="poster">Loading poster...</span>
             </div>
@@ -140,7 +143,7 @@
     <div class="footer-content scroll-reveal" style="--reveal-delay: 120ms">
       <div class="footer-description">
         <div>
-          <img class="footer-logo" src="../assets/images/logo.jpg" alt="." />
+          <img class="footer-logo" src="../assets/images/logo.jpg" alt="." loading="lazy" />
         </div>
         <div>
           <h3>Unilost</h3>
@@ -152,7 +155,5 @@
       </div>
     </div>
   </footer>
-  <script src="../assets/js/auth.js?v=1" defer></script>
-  <script src="../assets/js/details.js?v=1" defer></script>
-  <script src="../assets/js/guard.js?v=1" defer></script>
+  <script src="../assets/js/bundle-all.min.js?v=1" defer></script>
 </html>

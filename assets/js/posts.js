@@ -1,3 +1,4 @@
+(() => {
 function getPostsConfig() {
     const path = window.location.pathname;
 
@@ -66,22 +67,31 @@ function createPostCard(item) {
       <a class="post-card" href="${detailsPath}">
         <span class="post-status ${statusClass}">${statusLabel}</span>
         <div class="${imageContainerClass}">
-          <img class="${imageClass}" src="${photoPath}" alt="${item.title}" />
+          <img class="${imageClass}" src="${photoPath}" alt="${item.title}" loading="lazy" decoding="async" />
         </div>
         <h3 class="post-title">${item.title}</h3>
         <p class="post-desc">${description}</p>
         <div class="post-meta">
           <div class="details-container">
-            <img src="${getAssetPath('gray-location.png')}" class="location-icon" alt="Location" />
+            <img src="${getAssetPath('gray-location.png')}" class="location-icon" alt="Location" loading="lazy" />
             <span class="post-place">${item.location}</span><br />
           </div>
           <div class="details-container">
-            <img src="${getAssetPath('calendar.png')}" class="calendar-icon" alt="Date" />
+            <img src="${getAssetPath('calendar.png')}" class="calendar-icon" alt="Date" loading="lazy" />
             <span class="post-date">${item.date}</span>
           </div>
         </div>
       </a>
     `;
+}
+
+function withDefaultPagination(endpoint, page) {
+    if (endpoint.includes('limit=')) {
+        return endpoint;
+    }
+
+    const joiner = endpoint.includes('?') ? '&' : '?';
+    return `${endpoint}${joiner}page=${page}&page_size=20`;
 }
 
 function getDetailsPath(item) {
@@ -114,24 +124,68 @@ async function loadPosts() {
     container.innerHTML = createSkeletonCards(window.location.pathname.includes('/pages/') ? 6 : 4);
     container.classList.add('is-skeleton-loading');
 
-    try {
-        const res = await fetch(config.endpoint);
+    const initialPage = Number(new URLSearchParams(window.location.search).get('page')) || 1;
+    let currentPage = Math.max(1, initialPage);
+
+    async function fetchAndRender(page, shouldAppend) {
+        const endpoint = withDefaultPagination(config.endpoint, page);
+        const res = await fetch(endpoint);
         const data = await res.json();
 
         if (!data.success) {
             container.classList.remove('is-skeleton-loading');
             container.innerHTML = '<p>Could not load posts right now.</p>';
-            return;
+            return null;
         }
 
         if (!Array.isArray(data.items) || data.items.length === 0) {
             container.classList.remove('is-skeleton-loading');
-            container.innerHTML = `<p>${config.emptyMessage}</p>`;
-            return;
+            if (!shouldAppend) {
+                container.innerHTML = `<p>${config.emptyMessage}</p>`;
+            }
+            return data;
         }
 
         container.classList.remove('is-skeleton-loading');
-        container.innerHTML = data.items.map(createPostCard).join('');
+        const html = data.items.map(createPostCard).join('');
+        container.innerHTML = shouldAppend ? container.innerHTML + html : html;
+        return data;
+    }
+
+    function renderLoadMore(data) {
+        const existing = document.querySelector('.load-more-btn');
+        if (existing) {
+            existing.remove();
+        }
+
+        if (!data || !data.pagination || !data.pagination.has_more || config.endpoint.includes('limit=')) {
+            return;
+        }
+
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'load-more-btn';
+        button.textContent = 'Load More';
+        button.addEventListener('click', async () => {
+            button.disabled = true;
+            button.textContent = 'Loading...';
+            currentPage += 1;
+
+            try {
+                const nextData = await fetchAndRender(currentPage, true);
+                renderLoadMore(nextData);
+            } catch (error) {
+                button.disabled = false;
+                button.textContent = 'Load More';
+            }
+        });
+
+        container.insertAdjacentElement('afterend', button);
+    }
+
+    try {
+        const data = await fetchAndRender(currentPage, false);
+        renderLoadMore(data);
     } catch (error) {
         container.classList.remove('is-skeleton-loading');
         container.innerHTML = '<p>Could not load posts right now.</p>';
@@ -145,3 +199,6 @@ window.addEventListener('pageshow', (event) => {
     loadPosts();
   }
 });
+
+})();
+

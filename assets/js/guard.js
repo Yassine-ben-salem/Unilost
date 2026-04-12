@@ -12,18 +12,19 @@
             '/pages/all-posts.html',
             '/pages/lost-details.html',
             '/pages/found-details.html',
-            '/pages/page-not-found.html'
+            '/pages/page-not-found.html',
+            '/pages/my-posts.html',
+            '/pages/publish.html'
         ];
         const requiresAccessInterstitial = guardedTargets.some((target) => path.endsWith(target));
 
-        if (requiresAccessInterstitial) {
-            const redirectBase = path.split('/').pop() || 'lost.html';
-            const redirect = `${redirectBase}${query || ''}`;
-            const destination = isInPagesFolder ? 'access-required.html' : 'pages/access-required.html';
-            window.location.replace(`${destination}?redirect=${encodeURIComponent(redirect)}`);
+        if (!requiresAccessInterstitial) {
             return;
         }
 
-        window.location.replace(isInPagesFolder ? 'login.html' : 'pages/login.html');
+        const redirectBase = path.split('/').pop() || 'lost.html';
+        const redirect = `${redirectBase}${query || ''}`;
+        const destination = isInPagesFolder ? 'access-required.html' : 'pages/access-required.html';
+        window.location.replace(`${destination}?redirect=${encodeURIComponent(redirect)}`);
     }
 })();

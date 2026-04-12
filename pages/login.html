@@ -8,13 +8,12 @@
       }
     </script>
     <title>Login</title>
-    <link rel="stylesheet" href="../style.css?v=1" />
-    <link rel="stylesheet" href="../auth.css?v=1" />
+    <link rel="stylesheet" href="../style-bundle.min.css?v=1" />
   </head>
   <body>
     <header class="header">
       <div class="logo-container" onclick="location.href = '/'">
-        <img src="../assets/images/logo.jpg" height="50px" />
+        <img src="../assets/images/logo.jpg" height="50px" loading="lazy" />
         <h3 class="logo">UniLost</h3>
       </div>
       <nav class="nav-bar">
@@ -35,7 +34,7 @@
           <span>Back</span>
         </a>
       </div>
-      <img class="main-logo" src="../assets/images/logo.jpg" width="50px" />
+      <img class="main-logo" src="../assets/images/logo.jpg" width="50px" loading="lazy" />
       <div class="title-container" style="--reveal-delay: 80ms">
         <h1 class="main-title">Welcome Back</h1>
         <p>Sign in to your UniLost account</p>
@@ -48,12 +47,12 @@
       >
         <label for="Email">Email</label>
         <div>
-          <img src="../assets/images/black-email.png" />
+          <img src="../assets/images/black-email.png" loading="lazy" />
           <input id="Email" type="email" placeholder="Enter your Email" />
         </div>
         <label for="Password">Password</label>
         <div>
-          <img src="../assets/images/padlock.png" />
+          <img src="../assets/images/padlock.png" loading="lazy" />
           <input
             id="Password"
             type="password"
@@ -70,7 +69,7 @@
     <div class="footer-content" style="--reveal-delay: 120ms">
       <div class="footer-description">
         <div>
-          <img class="footer-logo" src="../assets/images/logo.jpg" alt="." />
+          <img class="footer-logo" src="../assets/images/logo.jpg" alt="." loading="lazy" />
         </div>
         <div>
           <h3>Unilost</h3>
@@ -82,5 +81,5 @@
       </div>
     </div>
   </footer>
-  <script src="../assets/js/auth.js?v=1" defer></script>
+  <script src="../assets/js/bundle-all.min.js?v=1" defer></script>
 </html>

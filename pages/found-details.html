@@ -29,8 +29,7 @@
         );
       })();
     </script>
-    <link rel="stylesheet" href="../style.css?v=1" />
-    <link rel="stylesheet" href="../details.css?v=1" />
+    <link rel="stylesheet" href="../style-bundle.min.css?v=1" />
   </head>
   <body>
     <header class="header">
@@ -38,7 +37,7 @@
         class="logo-container"
         onclick="window.location.href = '../index.html'"
       >
-        <img src="../assets/images/logo.jpg" height="50px" />
+        <img src="../assets/images/logo.jpg" height="50px" loading="lazy" />
         <h3 class="logo">UniLost</h3>
       </div>
       <nav class="nav-bar">
@@ -60,7 +59,7 @@
       </div>
       <div class="item-card">
         <div class="item-image-container">
-          <img class="item-image" src="../assets/images/no-photo.png" />
+          <img class="item-image" src="../assets/images/no-photo.png" loading="lazy" />
         </div>
         <div class="item-details">
           <p class="item-status is-found">FOUND</p>
@@ -70,15 +69,16 @@
               <img
                 src="../assets/images/gray-location.png"
                 class="location-icon"
+                loading="lazy"
               />
               <span class="item-place">Loading location...</span>
             </div>
             <div class="details-container">
-              <img src="../assets/images/calendar.png" class="calendar-icon" />
+              <img src="../assets/images/calendar.png" class="calendar-icon" loading="lazy" />
               <span class="item-date">Loading date...</span>
             </div>
             <div class="details-container">
-              <img src="../assets/images/gray-user.png" class="user-icon" />
+              <img src="../assets/images/gray-user.png" class="user-icon" loading="lazy" />
               <span class="poster">Loading poster...</span>
             </div>
           </div>
@@ -127,8 +127,6 @@
       </div>
     </main>
 
-    <script src="../assets/js/auth.js?v=1" defer></script>
-    <script src="../assets/js/details.js?v=1" defer></script>
-    <script src="../assets/js/guard.js?v=1" defer></script>
+    <script src="../assets/js/bundle-all.min.js?v=1" defer></script>
   </body>
 </html>

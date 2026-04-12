@@ -6,5 +6,6 @@ return [
     'db_name' => 'unilost',
     'db_user' => 'root',
     'db_pass' => 'root',
-    'upload_dir' => __DIR__ . '/../assets/uploads'
+    'upload_dir' => __DIR__ . '/../assets/uploads',
+    'items_support_resolution' => true
 ];

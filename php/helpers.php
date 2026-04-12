@@ -45,13 +45,14 @@ function items_support_resolution(PDO $pdo): bool
         return $supportsResolution;
     }
 
-    $stmt = $pdo->query("SHOW COLUMNS FROM items LIKE 'status'");
-    $hasStatus = $stmt !== false && $stmt->fetch() !== false;
+    $config = require __DIR__ . '/config.php';
 
-    $stmt = $pdo->query("SHOW COLUMNS FROM items LIKE 'resolved_at'");
-    $hasResolvedAt = $stmt !== false && $stmt->fetch() !== false;
+    if (array_key_exists('items_support_resolution', $config)) {
+        $supportsResolution = (bool) $config['items_support_resolution'];
+        return $supportsResolution;
+    }
 
-    $supportsResolution = $hasStatus && $hasResolvedAt;
+    $supportsResolution = true;
 
     return $supportsResolution;
 }

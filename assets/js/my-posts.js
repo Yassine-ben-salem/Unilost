@@ -1,3 +1,4 @@
+(() => {
 function getAssetPath(filename) {
     return `../assets/images/${filename}`;
 }
@@ -229,3 +230,6 @@ window.addEventListener('pageshow', (event) => {
     loadMyPosts(myPostsState.currentStatus || 'active');
   }
 });
+
+})();
+

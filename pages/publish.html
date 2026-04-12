@@ -8,14 +8,12 @@
       }
     </script>
     <title>Post an Item</title>
-    <link rel="stylesheet" href="../style.css?v=1" />
-    <link rel="stylesheet" href="../auth.css?v=1" />
-    <link rel="stylesheet" href="../publish.css?v=1" />
+    <link rel="stylesheet" href="../style-bundle.min.css?v=1" />
   </head>
   <body>
     <header class="header">
       <div class="logo-container" onclick="location.href = '/'">
-        <img src="../assets/images/logo.jpg" height="50px" />
+        <img src="../assets/images/logo.jpg" height="50px" loading="lazy" />
         <h3 class="logo">UniLost</h3>
       </div>
       <nav class="nav-bar">
@@ -55,14 +53,14 @@
               checked
             />
             <div class="type-btn">
-              <img src="../assets/images/search.png" />
+              <img src="../assets/images/search.png" loading="lazy" />
               <span>I Lost Something</span>
             </div>
           </label>
           <label class="type-option">
             <input type="radio" name="type" value="found" id="type-found" />
             <div class="type-btn">
-              <img src="../assets/images/box.png" />
+              <img src="../assets/images/box.png" loading="lazy" />
               <span>I Found Something</span>
             </div>
           </label>
@@ -70,7 +68,7 @@
 
         <label for="item-title">Item Title</label>
         <div>
-          <img src="../assets/images/tag.png" />
+          <img src="../assets/images/tag.png" loading="lazy" />
           <input
             id="item-title"
             type="text"
@@ -80,7 +78,7 @@
 
         <label for="item-location">Location</label>
         <div>
-          <img src="../assets/images/gray-location.png" />
+          <img src="../assets/images/gray-location.png" loading="lazy" />
           <input
             id="item-location"
             type="text"
@@ -90,7 +88,7 @@
 
         <label for="item-date">Date</label>
         <div>
-          <img src="../assets/images/calendar.png" />
+          <img src="../assets/images/calendar.png" loading="lazy" />
           <input id="item-date" type="date" />
         </div>
 
@@ -135,7 +133,7 @@
       <div class="footer-content">
         <div class="footer-description">
           <div>
-            <img class="footer-logo" src="../assets/images/logo.jpg" alt="." />
+            <img class="footer-logo" src="../assets/images/logo.jpg" alt="." loading="lazy" />
           </div>
           <div>
             <h3>Unilost</h3>
@@ -148,8 +146,6 @@
       </div>
     </footer>
 
-    <script src="../assets/js/auth.js?v=1" defer></script>
-    <script src="../assets/js/guard.js?v=1" defer></script>
-    <script src="../assets/js/publish.js?v=1" defer></script>
+    <script src="../assets/js/bundle-all.min.js?v=1" defer></script>
   </body>
 </html>

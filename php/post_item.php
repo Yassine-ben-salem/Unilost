@@ -6,6 +6,8 @@ session_start();
 
 require __DIR__ . '/db.php';
 require __DIR__ . '/helpers.php';
+require __DIR__ . '/RateLimiter.php';
+require __DIR__ . '/Cache.php';
 
 function detect_image_mime_type(string $path): ?string
 {
@@ -32,11 +34,79 @@ function detect_image_mime_type(string $path): ?string
         : null;
 }
 
+function compress_image(string $path, string $mimeType): void
+{
+    if (!function_exists('imagecreatefromjpeg')) {
+        return;
+    }
+
+    try {
+        $maxWidth = 1200;
+        $maxHeight = 1200;
+        $quality = 75;
+
+        if ($mimeType === 'image/jpeg') {
+            $image = imagecreatefromjpeg($path);
+        } elseif ($mimeType === 'image/png') {
+            $image = imagecreatefrompng($path);
+        } elseif ($mimeType === 'image/webp') {
+            $image = imagecreatefromwebp($path);
+        } elseif ($mimeType === 'image/gif') {
+            $image = imagecreatefromgif($path);
+        } else {
+            return;
+        }
+
+        if ($image === false) {
+            return;
+        }
+
+        $width = imagesx($image);
+        $height = imagesy($image);
+
+        if ($width > $maxWidth || $height > $maxHeight) {
+            $ratio = min($maxWidth / $width, $maxHeight / $height);
+            $newWidth = (int) ($width * $ratio);
+            $newHeight = (int) ($height * $ratio);
+
+            $resized = imagecreatetruecolor($newWidth, $newHeight);
+            imagecopyresampled($resized, $image, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+            imagedestroy($image);
+            $image = $resized;
+        }
+
+        if ($mimeType === 'image/jpeg') {
+            imagejpeg($image, $path, $quality);
+        } elseif ($mimeType === 'image/png') {
+            imagepng($image, $path, 8);
+        } elseif ($mimeType === 'image/webp') {
+            imagewebp($image, $path, $quality);
+        }
+
+        imagedestroy($image);
+    } catch (Throwable $e) {
+        // Keep original upload when compression fails.
+    }
+}
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     send_json(['success' => false, 'message' => 'Method not allowed.'], 405);
 }
 
+header('Cache-Control: no-cache, no-store, must-revalidate');
+header('Pragma: no-cache');
+header('Expires: 0');
+
 $userId = require_auth();
+$limiter = new RateLimiter(__DIR__ . '/../.rate_limit', 10, 3600);
+
+if (!$limiter->isAllowed('post_' . $userId)) {
+    send_json([
+        'success' => false,
+        'message' => 'Too many requests. Please wait before posting again.'
+    ], 429);
+}
+
 $config = require __DIR__ . '/config.php';
 
 $type = trim((string) ($_POST['type'] ?? ''));
@@ -86,6 +156,8 @@ if (isset($_FILES['photo']) && $_FILES['photo']['error'] !== UPLOAD_ERR_NO_FILE)
         send_json(['success' => false, 'message' => 'Could not save the uploaded photo.'], 500);
     }
 
+    compress_image($destination, $mimeType);
+
     $photoPath = $filename;
 }
 
@@ -123,6 +195,9 @@ try {
             $photoPath
         ]);
     }
+
+    $cache = new Cache(__DIR__ . '/../.cache');
+    $cache->clear();
 
     send_json([
         'success' => true,

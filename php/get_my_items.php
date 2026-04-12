@@ -11,6 +11,9 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     send_json(['success' => false, 'message' => 'Method not allowed.'], 405);
 }
 
+header('Cache-Control: private, max-age=300');
+header('Expires: ' . gmdate('D, d M Y H:i:s T', time() + 300));
+
 $userId = require_auth();
 $status = isset($_GET['status']) ? trim((string) $_GET['status']) : null;
 

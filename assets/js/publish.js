@@ -1,3 +1,4 @@
+(() => {
 const form = document.getElementById('post-item-form');
 const titleInput = document.getElementById('item-title');
 const locationEl = document.getElementById('item-location');
@@ -161,3 +162,6 @@ if (form) {
         }
     });
 }
+
+})();
+

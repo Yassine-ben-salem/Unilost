@@ -6,9 +6,24 @@ session_start();
 
 require __DIR__ . '/db.php';
 require __DIR__ . '/helpers.php';
+require __DIR__ . '/RateLimiter.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     send_json(['success' => false, 'message' => 'Method not allowed.'], 405);
+}
+
+header('Cache-Control: no-cache, no-store, must-revalidate');
+header('Pragma: no-cache');
+header('Expires: 0');
+
+$limiter = new RateLimiter(__DIR__ . '/../.rate_limit', 5, 60);
+$clientIp = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+
+if (!$limiter->isAllowed('login_' . $clientIp)) {
+    send_json([
+        'success' => false,
+        'message' => 'Too many login attempts. Please try again later.'
+    ], 429);
 }
 
 $data = read_json_input();
