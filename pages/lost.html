@@ -2,10 +2,13 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
-      name="viewport"
-      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+      http-equiv="Cache-Control"
+      content="no-cache, no-store, must-revalidate"
     />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
     <script>
       if (localStorage.getItem("unilost_user")) {
         document.documentElement.classList.add("has-saved-user");
@@ -70,7 +73,12 @@
     <div class="footer-content scroll-reveal" style="--reveal-delay: 120ms">
       <div class="footer-description">
         <div>
-          <img class="footer-logo" src="../assets/images/logo.jpg" alt="." loading="lazy" />
+          <img
+            class="footer-logo"
+            src="../assets/images/logo.jpg"
+            alt="."
+            loading="lazy"
+          />
         </div>
         <div>
           <h3>Unilost</h3>
@@ -82,5 +90,5 @@
       </div>
     </div>
   </footer>
-  <script src="../assets/js/bundle-all.min.js?v=1" defer></script>
+  <script src="../assets/js/bundle-all.min.js?v=2" defer></script>
 </html>

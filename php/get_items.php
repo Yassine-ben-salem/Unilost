@@ -10,12 +10,21 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     send_json(['success' => false, 'message' => 'Method not allowed.'], 405);
 }
 
-header('Cache-Control: private, max-age=300');
-header('Expires: ' . gmdate('D, d M Y H:i:s T', time() + 300));
+// Disable caching for item detail fetches, use short cache for lists
+$itemId = isset($_GET['id']) ? (int) $_GET['id'] : null;
+if ($itemId !== null) {
+    // No cache for specific item lookups
+    header('Cache-Control: no-cache, no-store, must-revalidate, private');
+    header('Pragma: no-cache');
+    header('Expires: 0');
+} else {
+    // Short cache (5 min) for list views
+    header('Cache-Control: private, max-age=300');
+    header('Expires: ' . gmdate('D, d M Y H:i:s T', time() + 300));
+}
 
 $type = isset($_GET['type']) ? trim((string) $_GET['type']) : null;
 $limit = isset($_GET['limit']) ? (int) $_GET['limit'] : null;
-$itemId = isset($_GET['id']) ? (int) $_GET['id'] : null;
 $page = isset($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
 $pageSize = isset($_GET['page_size']) ? min(100, max(1, (int) $_GET['page_size'])) : 20;
 $offset = ($page - 1) * $pageSize;
@@ -35,7 +44,11 @@ if ($itemId !== null && $itemId < 1) {
 try {
     $pdo = db();
     $supportsResolution = items_support_resolution($pdo);
-    $cache = new Cache(__DIR__ . '/../.cache', 300);
+    
+    // Skip file cache if cache-busting parameter is present, or for item lookups/type-filtered views
+    $hasCacheBuster = isset($_GET['t']);
+    $useFileCache = !$hasCacheBuster && $itemId === null && $type === null;
+    $cache = $useFileCache ? new Cache(__DIR__ . '/../.cache', 300) : null;
 
     $cacheKey = implode('_', [
         'items',
@@ -47,7 +60,7 @@ try {
         $supportsResolution ? 'res' : 'legacy'
     ]);
 
-    $formattedItems = $cache->get($cacheKey);
+    $formattedItems = $cache !== null ? $cache->get($cacheKey) : null;
 
     if ($formattedItems === null) {
         if ($supportsResolution) {
@@ -112,7 +125,9 @@ try {
             ];
         }, $items);
 
-        $cache->set($cacheKey, $formattedItems, 300);
+        if ($cache !== null) {
+            $cache->set($cacheKey, $formattedItems, 300);
+        }
     }
 
     if ($itemId !== null) {
