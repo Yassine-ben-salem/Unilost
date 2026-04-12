@@ -150,7 +150,10 @@ if (form) {
 
             if (result.success) {
                 const type = formData.get('type');
-                window.location.href = type === 'lost' ? 'lost.html' : 'found.html';
+                const itemId = result.item.id;
+                // Redirect to the detail page of the newly created post
+                const detailPage = type === 'lost' ? 'lost-details.html' : 'found-details.html';
+                window.location.href = `${detailPage}?id=${itemId}`;
             } else {
                 showBanner(result.message || 'Failed to post item. Please try again.');
             }

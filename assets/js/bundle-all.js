@@ -329,7 +329,6 @@ if (registerForm) {
 updateNavbar();
 updateHomepageCTA();
 document.documentElement.classList.add('auth-ui-ready');
-
 (() => {
 function getPostsConfig() {
     const path = window.location.pathname;
@@ -461,7 +460,15 @@ async function loadPosts() {
 
     async function fetchAndRender(page, shouldAppend) {
         const endpoint = withDefaultPagination(config.endpoint, page);
-        const res = await fetch(endpoint);
+        // Add cache-busting timestamp to always get fresh data
+        const cachebust = new Date().getTime();
+        const url = endpoint.includes('?') ? `${endpoint}&t=${cachebust}` : `${endpoint}?t=${cachebust}`;
+        const res = await fetch(url, {
+            cache: 'no-store',
+            headers: {
+                'Cache-Control': 'no-cache, no-store, must-revalidate'
+            }
+        });
         const data = await res.json();
 
         if (!data.success) {
@@ -527,13 +534,10 @@ async function loadPosts() {
 loadPosts();
 
 window.addEventListener('pageshow', (event) => {
-  if (event.persisted) {
-    loadPosts();
-  }
+  loadPosts();
 });
 
 })();
-
 
 function getDetailsAssetPath(filename) {
     return `../assets/images/${filename}`;
@@ -940,10 +944,17 @@ async function loadItemDetails() {
     }
 
     try {
-        const res = await fetch(`../php/get_items.php?id=${encodeURIComponent(itemId)}`);
+        // Add cache-busting parameter to ensure fresh data
+        const cachebust = new Date().getTime();
+        const res = await fetch(`../php/get_items.php?id=${encodeURIComponent(itemId)}&t=${cachebust}`, {
+            cache: 'no-store', // Prevent caching
+            headers: {
+                'Cache-Control': 'no-cache, no-store, must-revalidate'
+            }
+        });
         const data = await res.json();
 
-if (!data.success || !data.item) {
+        if (!data.success || !data.item) {
             window.location.replace('page-not-found.html');
             return;
         }
@@ -1001,18 +1012,18 @@ if (!data.success || !data.item) {
         updateResolvedState(item);
         setupManageActions(item);
     } catch (error) {
-        // Keep the placeholder content if loading fails.
+        // If loading fails (network error), redirect to not found
+        console.error('Error loading item details:', error);
+        window.location.replace('page-not-found.html');
     }
 }
 
 loadItemDetails();
 
+// Always reload when page is restored from back button (bfcache)
 window.addEventListener('pageshow', (event) => {
-  if (event.persisted) {
-    loadItemDetails();
-  }
+  loadItemDetails();
 });
-
 
 (() => {
 const form = document.getElementById('post-item-form');
@@ -1166,7 +1177,10 @@ if (form) {
 
             if (result.success) {
                 const type = formData.get('type');
-                window.location.href = type === 'lost' ? 'lost.html' : 'found.html';
+                const itemId = result.item.id;
+                // Redirect to the detail page of the newly created post
+                const detailPage = type === 'lost' ? 'lost-details.html' : 'found-details.html';
+                window.location.href = `${detailPage}?id=${itemId}`;
             } else {
                 showBanner(result.message || 'Failed to post item. Please try again.');
             }
@@ -1180,7 +1194,6 @@ if (form) {
 }
 
 })();
-
 
 (function () {
     const raw  = localStorage.getItem('unilost_user');
@@ -1212,7 +1225,6 @@ if (form) {
         window.location.replace(`${destination}?redirect=${encodeURIComponent(redirect)}`);
     }
 })();
-
 (() => {
 function getAssetPath(filename) {
     return `../assets/images/${filename}`;
@@ -1448,7 +1460,6 @@ window.addEventListener('pageshow', (event) => {
 
 })();
 
-
 function getRedirectTarget() {
     const params = new URLSearchParams(window.location.search);
     const redirect = params.get('redirect') || '';
@@ -1504,4 +1515,3 @@ if (registerLink) {
 if (accessMessage) {
     accessMessage.textContent = `Login or Register to access ${targetLabel}.`;
 }
-

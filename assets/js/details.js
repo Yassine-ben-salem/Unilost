@@ -403,10 +403,17 @@ async function loadItemDetails() {
     }
 
     try {
-        const res = await fetch(`../php/get_items.php?id=${encodeURIComponent(itemId)}`);
+        // Add cache-busting parameter to ensure fresh data
+        const cachebust = new Date().getTime();
+        const res = await fetch(`../php/get_items.php?id=${encodeURIComponent(itemId)}&t=${cachebust}`, {
+            cache: 'no-store', // Prevent caching
+            headers: {
+                'Cache-Control': 'no-cache, no-store, must-revalidate'
+            }
+        });
         const data = await res.json();
 
-if (!data.success || !data.item) {
+        if (!data.success || !data.item) {
             window.location.replace('page-not-found.html');
             return;
         }
@@ -464,15 +471,16 @@ if (!data.success || !data.item) {
         updateResolvedState(item);
         setupManageActions(item);
     } catch (error) {
-        // Keep the placeholder content if loading fails.
+        // If loading fails (network error), redirect to not found
+        console.error('Error loading item details:', error);
+        window.location.replace('page-not-found.html');
     }
 }
 
 loadItemDetails();
 
+// Always reload when page is restored from back button (bfcache)
 window.addEventListener('pageshow', (event) => {
-  if (event.persisted) {
-    loadItemDetails();
-  }
+  loadItemDetails();
 });
 

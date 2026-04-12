@@ -129,7 +129,15 @@ async function loadPosts() {
 
     async function fetchAndRender(page, shouldAppend) {
         const endpoint = withDefaultPagination(config.endpoint, page);
-        const res = await fetch(endpoint);
+        // Add cache-busting timestamp to always get fresh data
+        const cachebust = new Date().getTime();
+        const url = endpoint.includes('?') ? `${endpoint}&t=${cachebust}` : `${endpoint}?t=${cachebust}`;
+        const res = await fetch(url, {
+            cache: 'no-store',
+            headers: {
+                'Cache-Control': 'no-cache, no-store, must-revalidate'
+            }
+        });
         const data = await res.json();
 
         if (!data.success) {
@@ -195,9 +203,7 @@ async function loadPosts() {
 loadPosts();
 
 window.addEventListener('pageshow', (event) => {
-  if (event.persisted) {
-    loadPosts();
-  }
+  loadPosts();
 });
 
 })();
