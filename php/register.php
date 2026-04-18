@@ -2,35 +2,33 @@
 
 declare(strict_types=1);
 
-session_start();
+require __DIR__ . '/helpers.php';
+start_app_session();
 
 require __DIR__ . '/db.php';
-require __DIR__ . '/helpers.php';
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    send_json(['success' => false, 'message' => 'Method not allowed.'], 405);
-}
-
-header('Cache-Control: no-cache, no-store, must-revalidate');
-header('Pragma: no-cache');
-header('Expires: 0');
+require_method('POST');
+no_cache_headers();
 
 $data = read_json_input();
-$name = trim((string) ($data['name'] ?? ''));
-$email = trim((string) ($data['email'] ?? ''));
-$password = (string) ($data['password'] ?? '');
 
-if ($name === '' || $email === '' || $password === '') {
-    send_json(['success' => false, 'message' => 'All fields are required.'], 422);
+$errors = validate_required($data, ['name', 'email', 'password']);
+if (!empty($errors)) {
+    send_json(['success' => false, 'message' => implode(' ', $errors)], 422);
 }
 
-if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+if (!validate_email($data['email'])) {
     send_json(['success' => false, 'message' => 'Please enter a valid email address.'], 422);
 }
 
-if (mb_strlen($password) < 8) {
-    send_json(['success' => false, 'message' => 'Password must be at least 8 characters.'], 422);
+$pwError = validate_min_length($data['password'], 8, 'Password');
+if ($pwError) {
+    send_json(['success' => false, 'message' => $pwError], 422);
 }
+
+$name = trim($data['name']);
+$email = trim($data['email']);
+$password = $data['password'];
 
 try {
     $pdo = db();

@@ -2,20 +2,14 @@
 
 declare(strict_types=1);
 
-session_start();
+require __DIR__ . '/helpers.php';
+start_app_session();
 
 require __DIR__ . '/db.php';
-require __DIR__ . '/helpers.php';
 require __DIR__ . '/RateLimiter.php';
-require __DIR__ . '/Cache.php';
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    send_json(['success' => false, 'message' => 'Method not allowed.'], 405);
-}
-
-header('Cache-Control: no-cache, no-store, must-revalidate');
-header('Pragma: no-cache');
-header('Expires: 0');
+require_method('POST');
+no_cache_headers();
 
 $userId = require_auth();
 $limiter = new RateLimiter(__DIR__ . '/../.rate_limit', 30, 60);
@@ -52,9 +46,6 @@ try {
     $deleteStmt->execute([$itemId]);
 
     remove_item_photo($item['photo_path'] ?? null);
-
-    $cache = new Cache(__DIR__ . '/../.cache');
-    $cache->clear();
 
     send_json([
         'success' => true,

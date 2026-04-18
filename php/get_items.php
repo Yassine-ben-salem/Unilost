@@ -4,25 +4,11 @@ declare(strict_types=1);
 
 require __DIR__ . '/db.php';
 require __DIR__ . '/helpers.php';
-require __DIR__ . '/Cache.php';
 
-if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
-    send_json(['success' => false, 'message' => 'Method not allowed.'], 405);
-}
+require_method('GET');
+no_cache_headers();
 
-// Disable caching for item detail fetches, use short cache for lists
 $itemId = isset($_GET['id']) ? (int) $_GET['id'] : null;
-if ($itemId !== null) {
-    // No cache for specific item lookups
-    header('Cache-Control: no-cache, no-store, must-revalidate, private');
-    header('Pragma: no-cache');
-    header('Expires: 0');
-} else {
-    // Short cache (5 min) for list views
-    header('Cache-Control: private, max-age=300');
-    header('Expires: ' . gmdate('D, d M Y H:i:s T', time() + 300));
-}
-
 $type = isset($_GET['type']) ? trim((string) $_GET['type']) : null;
 $limit = isset($_GET['limit']) ? (int) $_GET['limit'] : null;
 $page = isset($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
@@ -44,91 +30,68 @@ if ($itemId !== null && $itemId < 1) {
 try {
     $pdo = db();
     $supportsResolution = items_support_resolution($pdo);
-    
-    // Skip file cache if cache-busting parameter is present, or for item lookups/type-filtered views
-    $hasCacheBuster = isset($_GET['t']);
-    $useFileCache = !$hasCacheBuster && $itemId === null && $type === null;
-    $cache = $useFileCache ? new Cache(__DIR__ . '/../.cache', 300) : null;
 
-    $cacheKey = implode('_', [
-        'items',
-        $type ?? 'all',
-        $itemId ?? 'none',
-        $limit ?? 'none',
-        $page,
-        $pageSize,
-        $supportsResolution ? 'res' : 'legacy'
-    ]);
-
-    $formattedItems = $cache !== null ? $cache->get($cacheKey) : null;
-
-    if ($formattedItems === null) {
-        if ($supportsResolution) {
-            $sql = 'SELECT items.id, items.user_id, items.type, items.status, items.title, items.location, items.item_date,
-                           items.description, items.photo_path, items.resolved_at, items.created_at,
-                           users.name AS poster_name, users.email AS poster_email
-                    FROM items
-                    INNER JOIN users ON users.id = items.user_id';
-        } else {
-            $sql = "SELECT items.id, items.user_id, items.type, 'active' AS status, items.title, items.location, items.item_date,
-                           items.description, items.photo_path, NULL AS resolved_at, items.created_at,
-                           users.name AS poster_name, users.email AS poster_email
-                    FROM items
-                    INNER JOIN users ON users.id = items.user_id";
-        }
-
-        $params = [];
-
-        if ($itemId !== null) {
-            $sql .= ' WHERE items.id = ?';
-            $params[] = $itemId;
-        } elseif ($type) {
-            if ($supportsResolution) {
-                $sql .= ' WHERE items.type = ? AND items.status = ?';
-                $params[] = $type;
-                $params[] = 'active';
-            } else {
-                $sql .= ' WHERE items.type = ?';
-                $params[] = $type;
-            }
-        } elseif ($supportsResolution) {
-            $sql .= ' WHERE items.status = ?';
-            $params[] = 'active';
-        }
-
-        $sql .= ' ORDER BY items.created_at DESC';
-
-        if ($limit !== null) {
-            $sql .= ' LIMIT ' . (int) $limit;
-        } elseif ($itemId === null) {
-            $sql .= ' LIMIT ' . $pageSize . ' OFFSET ' . $offset;
-        }
-
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute($params);
-        $items = $stmt->fetchAll();
-        $formattedItems = array_map(static function (array $item): array {
-            return [
-                'id' => (int) $item['id'],
-                'user_id' => (int) $item['user_id'],
-                'type' => $item['type'],
-                'status' => $item['status'],
-                'title' => $item['title'],
-                'location' => $item['location'],
-                'date' => $item['item_date'],
-                'description' => $item['description'] ?? '',
-                'photo_path' => $item['photo_path'] ?: null,
-                'resolved_at' => $item['resolved_at'],
-                'poster_name' => $item['poster_name'],
-                'poster_email' => $item['poster_email'],
-                'created_at' => $item['created_at']
-            ];
-        }, $items);
-
-        if ($cache !== null) {
-            $cache->set($cacheKey, $formattedItems, 300);
-        }
+    if ($supportsResolution) {
+        $sql = 'SELECT items.id, items.user_id, items.type, items.status, items.title, items.location, items.item_date,
+                       items.description, items.photo_path, items.resolved_at, items.created_at,
+                       users.name AS poster_name, users.email AS poster_email
+                FROM items
+                INNER JOIN users ON users.id = items.user_id';
+    } else {
+        $sql = "SELECT items.id, items.user_id, items.type, 'active' AS status, items.title, items.location, items.item_date,
+                       items.description, items.photo_path, NULL AS resolved_at, items.created_at,
+                       users.name AS poster_name, users.email AS poster_email
+                FROM items
+                INNER JOIN users ON users.id = items.user_id";
     }
+
+    $params = [];
+
+    if ($itemId !== null) {
+        $sql .= ' WHERE items.id = ?';
+        $params[] = $itemId;
+    } elseif ($type) {
+        if ($supportsResolution) {
+            $sql .= ' WHERE items.type = ? AND items.status = ?';
+            $params[] = $type;
+            $params[] = 'active';
+        } else {
+            $sql .= ' WHERE items.type = ?';
+            $params[] = $type;
+        }
+    } elseif ($supportsResolution) {
+        $sql .= ' WHERE items.status = ?';
+        $params[] = 'active';
+    }
+
+    $sql .= ' ORDER BY items.created_at DESC';
+
+    if ($limit !== null) {
+        $sql .= ' LIMIT ' . (int) $limit;
+    } elseif ($itemId === null) {
+        $sql .= ' LIMIT ' . $pageSize . ' OFFSET ' . $offset;
+    }
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute($params);
+    $items = $stmt->fetchAll();
+    $formattedItems = array_map(static function (array $item): array {
+        return [
+            'id' => (int) $item['id'],
+            'user_id' => (int) $item['user_id'],
+            'type' => $item['type'],
+            'status' => $item['status'],
+            'title' => $item['title'],
+            'location' => $item['location'],
+            'date' => $item['item_date'],
+            'description' => $item['description'] ?? '',
+            'photo_path' => $item['photo_path'] ?: null,
+            'resolved_at' => $item['resolved_at'],
+            'poster_name' => $item['poster_name'],
+            'poster_email' => $item['poster_email'],
+            'created_at' => $item['created_at']
+        ];
+    }, $items);
 
     if ($itemId !== null) {
         if (count($formattedItems) === 0) {

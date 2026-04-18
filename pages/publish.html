@@ -8,7 +8,7 @@
       }
     </script>
     <title>Post an Item</title>
-    <link rel="stylesheet" href="../style-bundle.min.css?v=1" />
+    <link rel="stylesheet" href="../style.css" />
   </head>
   <body>
     <header class="header">
@@ -28,7 +28,7 @@
     </header>
 
     <hr class="separator" />
-    <main class="page-load">
+    <main class="page-load auth-page">
       <div class="back-link-shell">
         <a class="back-link" href="javascript:history.back()">
           <span class="back-link-icon" aria-hidden="true">&larr;</span>
@@ -100,9 +100,7 @@
           rows="4"
         ></textarea>
 
-        <label for="item-photo"
-          >Photo <span class="optional">(optional)</span></label
-        >
+        <label for="item-photo">Photo</label>
         <div class="photo-upload-area" id="photo-upload-area">
           <input
             id="item-photo"
@@ -118,9 +116,9 @@
             class="photo-preview"
             src=""
             alt="Preview"
-            style="display: none"
           />
         </div>
+        <p id="err-item-photo" class="field-error"></p>
         <button type="submit" class="register-btn" id="submit-btn">
           Post Item
         </button>
@@ -133,7 +131,12 @@
       <div class="footer-content">
         <div class="footer-description">
           <div>
-            <img class="footer-logo" src="../assets/images/logo.jpg" alt="." loading="lazy" />
+            <img
+              class="footer-logo"
+              src="../assets/images/logo.jpg"
+              alt="."
+              loading="lazy"
+            />
           </div>
           <div>
             <h3>Unilost</h3>
@@ -146,6 +149,6 @@
       </div>
     </footer>
 
-    <script src="../assets/js/bundle-all.min.js?v=1" defer></script>
+    <script src="../assets/js/app.js" defer></script>
   </body>
 </html>

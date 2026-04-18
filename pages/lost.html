@@ -10,23 +10,19 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <script>
-      if (localStorage.getItem("unilost_user")) {
-        document.documentElement.classList.add("has-saved-user");
-      }
-    </script>
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Lost Items</title>
-    <script>
       (function () {
         const raw = localStorage.getItem("unilost_user");
-        if (raw) return;
+        if (raw) {
+          document.documentElement.classList.add("has-saved-user");
+          return;
+        }
         const redirect = "lost.html";
         window.location.replace(
           `access-required.html?redirect=${encodeURIComponent(redirect)}`,
         );
       })();
     </script>
-    <link rel="stylesheet" href="../style-bundle.min.css?v=1" />
+    <link rel="stylesheet" href="../style.css" />
   </head>
   <body>
     <header class="header">
@@ -90,5 +86,5 @@
       </div>
     </div>
   </footer>
-  <script src="../assets/js/bundle-all.min.js?v=2" defer></script>
+  <script src="../assets/js/app.js" defer></script>
 </html>

@@ -2,19 +2,14 @@
 
 declare(strict_types=1);
 
-session_start();
+require __DIR__ . '/helpers.php';
+start_app_session();
 
 require __DIR__ . '/db.php';
-require __DIR__ . '/helpers.php';
 require __DIR__ . '/RateLimiter.php';
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    send_json(['success' => false, 'message' => 'Method not allowed.'], 405);
-}
-
-header('Cache-Control: no-cache, no-store, must-revalidate');
-header('Pragma: no-cache');
-header('Expires: 0');
+require_method('POST');
+no_cache_headers();
 
 $limiter = new RateLimiter(__DIR__ . '/../.rate_limit', 5, 60);
 $clientIp = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
@@ -27,12 +22,18 @@ if (!$limiter->isAllowed('login_' . $clientIp)) {
 }
 
 $data = read_json_input();
-$email = trim((string) ($data['email'] ?? ''));
-$password = (string) ($data['password'] ?? '');
 
-if ($email === '' || $password === '') {
-    send_json(['success' => false, 'message' => 'Email and password are required.'], 422);
+$errors = validate_required($data, ['email', 'password']);
+if (!empty($errors)) {
+    send_json(['success' => false, 'message' => implode(' ', $errors)], 422);
 }
+
+if (!validate_email($data['email'])) {
+    send_json(['success' => false, 'message' => 'Please enter a valid email address.'], 422);
+}
+
+$email = trim($data['email']);
+$password = $data['password'];
 
 try {
     $pdo = db();

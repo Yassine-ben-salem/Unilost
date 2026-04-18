@@ -115,7 +115,13 @@ function updateNavbar() {
     `;
 
         setupAccountMenu();
+                return;
     }
+
+        authDiv.innerHTML = `
+            <a class="login-btn" id="nav-login" href="${getRelativePath('login.html')}">Login</a>
+            <a class="register-btn" id="nav-register" href="${getRelativePath('register.html')}">Register</a>
+        `;
 }
 
 function updateHomepageCTA() {
@@ -268,7 +274,7 @@ if (loginForm) {
 
             if (data.success) {
                 saveUser(data.user);
-                window.location.href = getRequestedRedirectPath('../index.html');
+                window.location.replace(getRequestedRedirectPath('../index.html'));
             } else {
                 showBanner(data.message || 'Invalid email or password.');
             }
@@ -313,7 +319,7 @@ if (registerForm) {
 
             if (data.success) {
                 saveUser(data.user);
-                window.location.href = getRequestedRedirectPath('../index.html');
+                window.location.replace(getRequestedRedirectPath('../index.html'));
             } else {
                 showBanner(data.message || 'Registration failed. Please try again.');
             }
@@ -329,6 +335,12 @@ if (registerForm) {
 updateNavbar();
 updateHomepageCTA();
 document.documentElement.classList.add('auth-ui-ready');
+
+window.addEventListener('pageshow', () => {
+    updateNavbar();
+    updateHomepageCTA();
+});
+
 (() => {
 function getPostsConfig() {
     const path = window.location.pathname;
@@ -1034,8 +1046,10 @@ const descEl = document.getElementById('item-description');
 const photoInput = document.getElementById('item-photo');
 const preview = document.getElementById('photo-preview');
 const placeholder = document.getElementById('photo-placeholder');
+const uploadArea = document.getElementById('photo-upload-area');
 const submitBtn = document.getElementById('submit-btn');
 const banner = document.getElementById('form-banner');
+let previewObjectUrl = '';
 
 
 
@@ -1044,26 +1058,56 @@ if (dateEl) {
 }
 
 
-if (photoInput) {
+function resetPhotoPreview() {
+    if (!preview) return;
+
+    if (previewObjectUrl) {
+        URL.revokeObjectURL(previewObjectUrl);
+        previewObjectUrl = '';
+    }
+
+    preview.removeAttribute('src');
+    preview.style.display = 'none';
+    if (uploadArea) uploadArea.classList.remove('has-image');
+    if (placeholder) placeholder.style.display = 'flex';
+}
+
+function setPhotoPreview(file) {
+    if (!preview || !file || !file.type.startsWith('image/')) {
+        resetPhotoPreview();
+        return;
+    }
+
+    if (previewObjectUrl) {
+        URL.revokeObjectURL(previewObjectUrl);
+    }
+
+    previewObjectUrl = URL.createObjectURL(file);
+    preview.src = previewObjectUrl;
+    preview.style.display = 'block';
+    if (uploadArea) uploadArea.classList.add('has-image');
+    if (placeholder) placeholder.style.display = 'none';
+}
+
+if (photoInput && preview) {
+    resetPhotoPreview();
+
     photoInput.addEventListener('change', () => {
         const file = photoInput.files[0];
-        const uploadArea = preview?.closest('.photo-upload-area');
 
         if (file) {
             clearFieldError('item-photo');
-            preview.src = URL.createObjectURL(file);
-            preview.style.display = 'block';
-            uploadArea?.classList.add('has-image');
-            if (placeholder) {
-                placeholder.style.display = 'none';
-            }
-        } else {
-            preview.style.display = 'none';
-            preview.removeAttribute('src');
-            uploadArea?.classList.remove('has-image');
-            if (placeholder) {
-                placeholder.style.display = 'flex';
-            }
+            setPhotoPreview(file);
+            return;
+        }
+
+        resetPhotoPreview();
+    });
+
+    window.addEventListener('beforeunload', () => {
+        if (previewObjectUrl) {
+            URL.revokeObjectURL(previewObjectUrl);
+            previewObjectUrl = '';
         }
     });
 }
@@ -1138,6 +1182,11 @@ function validate() {
 
     if (!dateEl.value) {
         showFieldError('item-date', 'Date is required.');
+        valid = false;
+    }
+
+    if (!photoInput.files[0]) {
+        showFieldError('item-photo', 'Photo is required.');
         valid = false;
     }
 
@@ -1505,11 +1554,35 @@ const targetLabel = redirectTarget.startsWith('found-details.html')
             : 'lost items';
 
 if (loginLink) {
-    loginLink.href = buildAuthLink('login.html');
+    const loginHref = buildAuthLink('login.html');
+    loginLink.href = loginHref;
+    loginLink.addEventListener('click', (event) => {
+        event.preventDefault();
+        window.location.replace(loginHref);
+    });
 }
 
 if (registerLink) {
-    registerLink.href = buildAuthLink('register.html');
+    const registerHref = buildAuthLink('register.html');
+    registerLink.href = registerHref;
+    registerLink.addEventListener('click', (event) => {
+        event.preventDefault();
+        window.location.replace(registerHref);
+    });
+}
+
+if (accessMessage) {
+    document.querySelectorAll('a.login-btn[href="login.html"], a.register-btn[href="register.html"]').forEach((link) => {
+        const href = link.classList.contains('login-btn')
+            ? buildAuthLink('login.html')
+            : buildAuthLink('register.html');
+
+        link.href = href;
+        link.addEventListener('click', (event) => {
+            event.preventDefault();
+            window.location.replace(href);
+        });
+    });
 }
 
 if (accessMessage) {
