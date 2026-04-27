@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      http-equiv="Cache-Control"
+      content="no-cache, no-store, must-revalidate"
+    />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <script>
+      if (localStorage.getItem("unilost_user")) {
+        document.documentElement.classList.add("has-saved-user");
+      }
+    </script>
+    <title>Unilost</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" href="assets/images/green-location.png" />
+  </head>
+  <body>
+    <header class="header">
+      <div class="logo-container" onclick="window.location.href = '/'">
+        <img src="assets/images/logo.jpg" height="50px" loading="lazy" />
+        <h3 class="logo">UniLost</h3>
+      </div>
+      <nav class="nav-bar">
+        <a href="/">Home</a>
+        <a href="pages/lost.html">Lost Objects</a>
+        <a href="pages/found.html">Found Objects</a>
+      </nav>
+      <div class="auth">
+        <a class="login-btn" id="nav-login" href="pages/login.html">Login</a>
+        <a class="register-btn" id="nav-register" href="pages/register.html"
+          >Register</a
+        >
+        <div id="nav-user" style="display: none"></div>
+      </div>
+    </header>
+    <hr class="separator" />
+    <main class="page-load">
+      <div class="intro">
+        <div class="platform-title-container">
+          <img
+            src="assets/images/green-location.png"
+            width="20px"
+            loading="lazy"
+          />
+          <p class="platform-title">University Lost & Found Platform</p>
+        </div>
+        <div class="slogan">
+          <span class="quote-1">Lost Something</span><br />
+          <span class="quote-1">in Campus?</span>
+          <span class="quote-2">We'll </span><br />
+          <span class="quote-3">Help You Find It</span>
+        </div>
+        <p class="sub-quote">
+          UniLost connects students and staff to help reunite lost items with
+          their owners. <br />
+          Report what you've lost or found, and let the community help.
+        </p>
+        <div class="browse-btns">
+          <div
+            class="browse-lost-container"
+            onclick="window.location.href = 'pages/lost.html'"
+          >
+            <img src="assets/images/search.png" width="20px" loading="lazy" />
+            <a class="lost-btn" href="pages/lost.html">Browse Lost Items</a>
+          </div>
+          <div
+            class="browse-found-container"
+            onclick="window.location.href = 'pages/found.html'"
+          >
+            <img src="assets/images/box.png" width="20px" loading="lazy" />
+            <a class="found-btn" href="pages/found.html">Browse Found Items</a>
+          </div>
+        </div>
+      </div>
+      <hr class="separator" />
+      <div class="recent-posts scroll-reveal">
+        <div class="recent-posts-header">
+          <h1>Recent Posts</h1>
+          <a class="all-posts" href="pages/all-posts.html">View all ➡ </a>
+        </div>
+        <p>The latest lost and found items from the community</p>
+        <div class="posts-container"></div>
+      </div>
+      <hr class="separator2" />
+      <div
+        class="publish-container scroll-reveal"
+        style="--reveal-delay: 180ms"
+      >
+        <h1 id="homepage-cta-title">Found or Lost Something?</h1>
+        <br />
+        <p id="homepage-cta-text">
+          Sign in to post items and help reunite belongings with their owners.
+        </p>
+        <br />
+        <a
+          class="get-started-btn"
+          id="homepage-cta-button"
+          href="pages/login.html"
+          >+ Get Started</a
+        >
+      </div>
+      <hr class="separator" />
+    </main>
+  </body>
+  <footer>
+    <div class="footer-content scroll-reveal" style="--reveal-delay: 120ms">
+      <div class="footer-description">
+        <div>
+          <img
+            class="footer-logo"
+            src="assets/images/logo.jpg"
+            alt="."
+            loading="lazy"
+          />
+        </div>
+        <div>
+          <h3>Unilost</h3>
+          <p>Reuniting students with their belongings</p>
+        </div>
+      </div>
+      <div class="copyright">
+        <p>© 2026 UniLost. Made for the students</p>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/js/auth.js" defer></script>
+  <script src="assets/js/posts-list.js" defer></script>
+
+  <script>
+    function goToDetails(element) {
+      const postId = element.dataset.postId;
+      const status = element.querySelector(".post-status");
+      if (!postId) return;
+
+      if (status.classList.contains("is-found")) {
+        window.location.href = `pages/found-details.html?id=${postId}`;
+      } else if (status.classList.contains("is-lost")) {
+        window.location.href = `pages/lost-details.html?id=${postId}`;
+      }
+    }
+  </script>
+</html>
+
+

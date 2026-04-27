@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <script>
+      if (localStorage.getItem("unilost_user"))
+        document.documentElement.classList.add("has-saved-user");
+    </script>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Page not found - UniLost</title>
+    <link rel="stylesheet" href="../style.css" />
+  </head>
+  <body>
+    <header class="header">
+      <div class="logo-container" onclick="window.location.href = '/'">
+        <img
+          src="../assets/images/logo.jpg"
+          height="50px"
+          alt="UniLost logo"
+          loading="lazy"
+        />
+        <h3 class="logo">UniLost</h3>
+      </div>
+      <nav class="nav-bar">
+        <a href="/">Home</a>
+        <a href="lost.html">Lost Objects</a>
+        <a href="found.html">Found Objects</a>
+      </nav>
+      <div class="auth">
+        <a class="login-btn" href="login.html">Login</a>
+        <a class="register-btn" href="register.html">Register</a>
+      </div>
+    </header>
+    <hr class="separator" />
+    <main>
+      <div class="not-found-container">
+        <h1 class="not-found-title">Page not found</h1>
+        <p class="not-found-text">
+          The post you're looking for doesn't exist or has been deleted.
+        </p>
+        <div class="not-found-actions">
+          <a href="javascript:history.back()" class="back-btn">← Go back</a>
+          <a href="../index.html" class="home-btn">Go home</a>
+        </div>
+      </div>
+    </main>
+    <footer>
+      <hr class="separator" />
+      <div class="footer-content">
+        <div class="footer-description">
+          <div>
+            <img
+              class="footer-logo"
+              src="../assets/images/logo.jpg"
+              alt="."
+              loading="lazy"
+            />
+          </div>
+          <div>
+            <h3>Unilost</h3>
+            <p>Reuniting students with their belongings</p>
+          </div>
+        </div>
+        <div class="copyright">
+          <p>© 2026 UniLost. Made for the students</p>
+        </div>
+      </div>
+    </footer>
+    <script src="../assets/js/auth.js" defer></script>
+    <script src="../assets/js/access-guard.js" defer></script>
+  </body>
+</html>
+
+

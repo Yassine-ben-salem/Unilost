@@ -1,0 +1,11 @@
+<?php
+
+return [
+    'db_host' => '127.0.0.1',
+    'db_port' => 3306,
+    'db_name' => 'unilost',
+    'db_user' => 'root',
+    'db_pass' => 'root',
+    'upload_dir' => __DIR__ . '/../assets/uploads',
+    'items_support_resolution' => true
+];

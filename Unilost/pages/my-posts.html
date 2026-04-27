@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <script>
+      if (localStorage.getItem("unilost_user")) {
+        document.documentElement.classList.add("has-saved-user");
+      }
+    </script>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>My Posts</title>
+    <link rel="stylesheet" href="../style.css" />
+  </head>
+  <body>
+    <header class="header">
+      <div class="logo-container" onclick="window.location.href = '/'">
+        <img
+          src="../assets/images/logo.jpg"
+          height="50px"
+          alt="UniLost logo"
+          loading="lazy"
+        />
+        <h3 class="logo">UniLost</h3>
+      </div>
+      <nav class="nav-bar">
+        <a href="/">Home</a>
+        <a href="lost.html">Lost Objects</a>
+        <a href="found.html">Found Objects</a>
+      </nav>
+      <div class="auth">
+        <a class="login-btn" href="login.html">Login</a>
+        <a class="register-btn" href="register.html">Register</a>
+      </div>
+    </header>
+    <hr class="separator" />
+    <main class="page-load">
+      <div class="back-link-shell">
+        <a class="back-link" href="javascript:history.back()">
+          <span class="back-link-icon" aria-hidden="true">&larr;</span>
+          <span>Back</span>
+        </a>
+      </div>
+      <section class="my-posts-intro">
+        <h1>Track your active and resolved posts</h1>
+        <p>
+          Switch between live posts and resolved ones to keep your
+          lost-and-found history organized.
+        </p>
+      </section>
+
+      <section class="my-posts-shell">
+        <div class="my-posts-toolbar">
+          <div
+            class="my-posts-filters"
+            role="tablist"
+            aria-label="My post filters"
+          >
+            <button
+              type="button"
+              class="filter-btn active"
+              data-status="active"
+            >
+              Active
+            </button>
+            <button type="button" class="filter-btn" data-status="resolved">
+              Resolved
+            </button>
+          </div>
+        </div>
+
+        <p class="my-posts-feedback" hidden></p>
+        <div class="posts-container"></div>
+      </section>
+    </main>
+    <footer>
+      <hr class="separator" />
+      <div class="footer-content scroll-reveal">
+        <div class="footer-description">
+          <div>
+            <img
+              class="footer-logo"
+              src="../assets/images/logo.jpg"
+              alt="."
+              loading="lazy"
+            />
+          </div>
+          <div>
+            <h3>Unilost</h3>
+            <p>Reuniting students with their belongings</p>
+          </div>
+        </div>
+        <div class="copyright">
+          <p>© 2026 UniLost. Made for the students</p>
+        </div>
+      </div>
+    </footer>
+    <script src="../assets/js/auth.js" defer></script>
+    <script src="../assets/js/my-posts.js" defer></script>
+    <script src="../assets/js/access-guard.js" defer></script>
+  </body>
+</html>
+
+

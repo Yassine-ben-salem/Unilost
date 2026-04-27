@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <script>
+      (function () {
+        const raw = localStorage.getItem("unilost_user");
+        if (raw) {
+          document.documentElement.classList.add("has-saved-user");
+          return;
+        }
+        const redirect = `found-details.html${window.location.search || ""}`;
+        window.location.replace(
+          `access-required.html?redirect=${encodeURIComponent(redirect)}`,
+        );
+      })();
+    </script>
+    <link rel="stylesheet" href="../style.css" />
+  </head>
+  <body>
+    <header class="header">
+      <div
+        class="logo-container"
+        onclick="window.location.href = '../index.html'"
+      >
+        <img src="../assets/images/logo.jpg" height="50px" loading="lazy" />
+        <h3 class="logo">UniLost</h3>
+      </div>
+      <nav class="nav-bar">
+        <a href="../index.html">Home</a>
+        <a href="lost.html">Lost Objects</a>
+        <a href="found.html">Found Objects</a>
+      </nav>
+      <div class="auth">
+        <a class="login-btn" href="login.html">Login</a>
+        <a class="register-btn" href="register.html">Register</a>
+      </div>
+    </header>
+    <main class="page-load">
+      <div class="item-page-shell">
+        <a class="back-link" href="javascript:history.back()">
+          <span class="back-link-icon" aria-hidden="true">&larr;</span>
+          <span>Back</span>
+        </a>
+      </div>
+      <div class="item-card">
+        <div class="item-image-container">
+          <img
+            class="item-image"
+            src="../assets/images/no-photo.png"
+            loading="lazy"
+          />
+        </div>
+        <div class="item-details">
+          <p class="item-status is-found">FOUND</p>
+          <h2 class="item-title">Loading item...</h2>
+          <div class="item-meta">
+            <div class="details-container">
+              <img
+                src="../assets/images/gray-location.png"
+                class="location-icon"
+                loading="lazy"
+              />
+              <span class="item-place">Loading location...</span>
+            </div>
+            <div class="details-container">
+              <img
+                src="../assets/images/calendar.png"
+                class="calendar-icon"
+                loading="lazy"
+              />
+              <span class="item-date">Loading date...</span>
+            </div>
+            <div class="details-container">
+              <img
+                src="../assets/images/gray-user.png"
+                class="user-icon"
+                loading="lazy"
+              />
+              <span class="poster">Loading poster...</span>
+            </div>
+          </div>
+          <hr class="separator" />
+          <div class="description-container">
+            <b class="item-desc-title">Description</b>
+            <p class="item-desc">Loading description...</p>
+          </div>
+          <div class="post-manage-container" hidden>
+            <h3 class="post-manage-title">Manage this post</h3>
+            <p class="post-manage-text">
+              If this item has been returned to its owner, you can mark the post
+              as resolved.
+            </p>
+            <button type="button" class="resolve-post-btn">
+              Mark as Resolved
+            </button>
+            <button type="button" class="delete-post-btn">Delete Post</button>
+            <div class="post-confirmation-bar" hidden>
+              <h3 class="post-confirmation-title">Confirm this action</h3>
+              <p class="post-confirmation-text"></p>
+              <div class="post-confirmation-actions">
+                <button type="button" class="confirmation-cancel-btn">
+                  Cancel
+                </button>
+                <button type="button" class="confirmation-confirm-btn">
+                  Confirm
+                </button>
+              </div>
+            </div>
+            <p class="resolve-feedback" hidden></p>
+          </div>
+          <div class="contact-container">
+            <h3>Is this your item?</h3>
+            <p>
+              If this belongs to you, please contact the finder to claim it.
+            </p>
+            <div class="contact-email-block">
+              <div class="contact-email-row">
+                <span class="contact-email-value">Loading contact...</span>
+                <button type="button" class="copy-email-btn">Copy</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script src="../assets/js/auth.js" defer></script>
+    <script src="../assets/js/item-details.js" defer></script>
+    <script src="../assets/js/access-guard.js" defer></script>
+  </body>
+</html>
+
+
